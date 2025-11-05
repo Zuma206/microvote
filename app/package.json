@@ -7,10 +7,12 @@
     "email": "j.peedle@lancaster.ac.uk"
   },
   "devDependencies": {
+    "typescript": "^5.9.3",
     "vite": "^7.1.12"
   },
   "scripts": {
-    "build": "vite build",
-    "dev": "vite dev"
+    "build": "npm run typecheck && vite build",
+    "dev": "vite dev",
+    "typecheck": "tsc"
   }
 }
