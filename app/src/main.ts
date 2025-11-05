@@ -1,13 +1,13 @@
-// The baud rate that the Micro:Bit uses
-// Source: https://makecode.microbit.org/device/serial
-const MICROBIT_BAUD_RATE = 115200;
+import * as microbit from "./microbit";
 
 const textDecoder = new TextDecoder();
 
 async function main() {
-  const port = await navigator.serial.requestPort();
+  const port = await navigator.serial.requestPort({
+    filters: [{ usbVendorId: microbit.USB_VID, usbProductId: microbit.USB_PID }],
+  });
   console.log("Connected to:", port.getInfo());
-  await port.open({ baudRate: MICROBIT_BAUD_RATE });
+  await port.open({ baudRate: microbit.BAUD_RATE });
   const reader = port.readable.getReader();
   while (true) {
     const { value, done } = await reader.read();
