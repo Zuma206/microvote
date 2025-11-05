@@ -5,5 +5,12 @@
   "author": {
     "name": "James Peedle",
     "email": "j.peedle@lancaster.ac.uk"
+  },
+  "devDependencies": {
+    "vite": "^7.1.12"
+  },
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite dev"
   }
 }
