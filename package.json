@@ -1,0 +1,9 @@
+{
+  "name": "microvote",
+  "private": true,
+  "license": "UNLICENSED",
+  "author": {
+    "name": "James Peedle",
+    "email": "j.peedle@lancaster.ac.uk"
+  }
+}
