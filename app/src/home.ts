@@ -1,4 +1,4 @@
-import { USB_PID, USB_VID } from "./microbit";
+import { Microbit } from "./microbit";
 import { setupTemplate } from "./setup";
 import { show } from "./utils";
 
@@ -10,18 +10,13 @@ export function homeTemplate(root: HTMLElement) {
   `;
 
   template.content.getElementById("connect").onclick = async function() {
-    const microbit = await requestMicrobit();
+    const microbit = await Microbit.request();
     show(root, setupTemplate());
+    await microbit.open();
+    while (true) {
+      console.log(await microbit.readLine());
+    }
   }
 
   return template;
-}
-
-function requestMicrobit() {
-  return navigator.serial.requestPort({
-    filters: [{
-      usbProductId: USB_PID,
-      usbVendorId: USB_VID,
-    }]
-  });
 }
