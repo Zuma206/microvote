@@ -1,17 +1,20 @@
 import { USB_PID, USB_VID } from "./microbit";
+import { setupTemplate } from "./setup";
+import { show } from "./utils";
 
-export function homeTemplate() {
+export function homeTemplate(root: HTMLElement) {
   const template = document.createElement("template");
   template.innerHTML = `
     <h1>Micovote Web App</h1>
     <button id="connect">Connect to the host Micro:Bit</button>
   `;
-  template.content.getElementById("connect").onclick = connect;
-  return template;
-}
 
-async function connect() {
-  const microbit = await requestMicrobit();
+  template.content.getElementById("connect").onclick = async function() {
+    const microbit = await requestMicrobit();
+    show(root, setupTemplate());
+  }
+
+  return template;
 }
 
 function requestMicrobit() {

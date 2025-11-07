@@ -1,5 +1,6 @@
 import { homeTemplate } from "./home";
 import * as microbit from "./microbit";
+import { show } from "./utils";
 
 const textDecoder = new TextDecoder();
 
@@ -18,4 +19,4 @@ async function main() {
 }
 
 const root = document.getElementById("root");
-root.appendChild(homeTemplate().content);
+show(root, homeTemplate(root));
