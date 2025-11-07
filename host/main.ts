@@ -1,1 +1,1 @@
-
+basic.showNumber(0);
