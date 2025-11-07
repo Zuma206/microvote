@@ -7,6 +7,7 @@
     "email": "j.peedle@lancaster.ac.uk"
   },
   "workspaces": [
+    "host",
     "app"
   ]
 }
