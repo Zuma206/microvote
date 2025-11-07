@@ -1,21 +1,21 @@
-import { show } from "./utils";
+import { Microbit } from "./microbit";
+import { resultsTemplate } from "./results";
+import { intToChar, show } from "./utils";
 
-export function setupTemplate() {
+export function setupTemplate(root: HTMLElement, microbit: Microbit) {
   const template = document.createElement("template");
   const options: string[] = [];
 
   template.innerHTML = `
     <h1>Setup a Vote</h1>
     <input id="question" placeholder="Question Title" />
-    <form>
-      <ul id="list">
-      </ul>
-    </form>
+    <ul id="list">
+    </ul>
     <form id="add">
       <input id="option" placeholder="Add option..." />
       <button>+</button>
     </form>
-    <button>Start Vote</button>
+    <button id="start">Start Vote</button>
   `;
 
   const option = template.content.getElementById("option") as HTMLInputElement;
@@ -27,16 +27,25 @@ export function setupTemplate() {
     show(list, optionsTemplate(options));
   }
 
+  const question = template.content.getElementById("question") as HTMLInputElement;
+  const start = template.content.getElementById("start") as HTMLButtonElement;
+  start.onclick = function() {
+    show(root, resultsTemplate(
+      microbit,
+      question.value,
+      options,
+    ));
+  }
+
   return template;
 }
 
-const A_CHAR_CODE = 65;
 
 function optionsTemplate(options: string[]) {
   const template = document.createElement("template");
   options.forEach((option, index) => {
     const listItem = document.createElement("li");
-    const letter = String.fromCharCode(A_CHAR_CODE + index);
+    const letter = intToChar(index);
     listItem.innerText = `${letter}) ${option}`;
     template.content.appendChild(listItem);
   });

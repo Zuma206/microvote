@@ -4,3 +4,9 @@ export function show(parent: HTMLElement, template: HTMLTemplateElement) {
   }
   parent.appendChild(template.content);
 }
+
+const A_CHAR_CODE = 65;
+
+export function intToChar(int: number) {
+  return String.fromCharCode(A_CHAR_CODE + int);
+}

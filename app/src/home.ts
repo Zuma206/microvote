@@ -11,11 +11,7 @@ export function homeTemplate(root: HTMLElement) {
 
   template.content.getElementById("connect").onclick = async function() {
     const microbit = await Microbit.request();
-    show(root, setupTemplate());
-    await microbit.open();
-    while (true) {
-      console.log(await microbit.readLine());
-    }
+    show(root, setupTemplate(root, microbit));
   }
 
   return template;

@@ -1,0 +1,29 @@
+import { Microbit } from "./microbit";
+import { intToChar, show } from "./utils";
+
+export function resultsTemplate(
+  microbit: Microbit,
+  title: string,
+  options: string[]
+) {
+  const template = document.createElement("template");
+  template.innerHTML = `
+    <h1 id="title"></h1>
+    <ul id="list"></ul>
+  `;
+  template.content.getElementById("title").innerText = title;
+  show(template.content.getElementById("list"), listTemplate(options, []))
+  return template;
+}
+
+function listTemplate(options: string[], results: number[]) {
+  const template = document.createElement("template");
+  options.forEach((option, index) => {
+    const listItem = document.createElement("li");
+    const letter = intToChar(index);
+    const result = results[index] ?? 0;
+    listItem.innerText = `${letter}) ${option}: ${result}`;
+    template.content.appendChild(listItem);
+  });
+  return template;
+}
