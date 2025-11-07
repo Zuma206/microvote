@@ -1,3 +1,4 @@
+import { homeTemplate } from "./home";
 import * as microbit from "./microbit";
 
 const textDecoder = new TextDecoder();
@@ -16,8 +17,5 @@ async function main() {
   }
 }
 
-const button = document.createElement("button");
-button.innerText = "Select Device";
-document.getElementById("root").append(button);
-button.addEventListener("click", main);
-
+const root = document.getElementById("root");
+root.appendChild(homeTemplate().content);
