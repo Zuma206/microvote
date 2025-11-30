@@ -32,6 +32,10 @@ export class Microbit {
   private readonly textEncoder = new TextEncoder();
   private textBuffer = "";
 
+  get isOpen() {
+    return this.reader !== undefined;
+  }
+
   async readLine() {
     if (!this.reader) throw new Error("micro:bit read before being opened");
     while (!this.textBuffer.includes("\n")) {
