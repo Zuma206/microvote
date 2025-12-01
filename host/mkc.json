@@ -1,0 +1,5 @@
+{
+  "links": {
+    "@microvote/reliable": "../reliable"
+  }
+}

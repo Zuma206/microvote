@@ -3,7 +3,8 @@
   "dependencies": {
     "core": "*",
     "radio": "*",
-    "microphone": "*"
+    "microphone": "*",
+    "@microvote/reliable": "file:../reliable"
   },
   "files": [
     "src/main.ts",

@@ -1,5 +1,7 @@
 serial.setRxBufferSize(128);
 
+Reliable.sayHello();
+
 const serialVote = new SerialVoteConnection();
 
 let currentOptions: number | undefined;
