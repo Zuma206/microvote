@@ -6,7 +6,8 @@
     "microphone": "*"
   },
   "files": [
-    "src/main.ts"
+    "src/main.ts",
+    "src/serialvote.ts"
   ],
   "public": false,
   "supportedTargets": [
