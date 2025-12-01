@@ -13,12 +13,13 @@ export function resultsTemplate(
     <ul id="list"></ul>
   `;
   template.content.getElementById("title")!.innerText = title;
-  show(template.content.getElementById("list")!, listTemplate(options, []));
+  const list = template.content.getElementById("list")!;
+  show(list, listTemplate(options, []));
   (async () => {
     await microbit.open();
     const serialVote = new SerialVoteConnection(microbit);
     serialVote.start(options.length, (votes) => {
-      show(template.content.getElementById("list")!, listTemplate(options, votes));
+      show(list, listTemplate(options, votes));
     });
   })();
   return template;
