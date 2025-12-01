@@ -1,8 +1,9 @@
 import { Microbit } from "./microbit";
+import { SerialVoteConnection } from "./serialvote";
 import { intToChar, show } from "./utils";
 
 export function resultsTemplate(
-  _: Microbit,
+  microbit: Microbit,
   title: string,
   options: string[]
 ) {
@@ -12,7 +13,14 @@ export function resultsTemplate(
     <ul id="list"></ul>
   `;
   template.content.getElementById("title")!.innerText = title;
-  show(template.content.getElementById("list")!, listTemplate(options, []))
+  show(template.content.getElementById("list")!, listTemplate(options, []));
+  (async () => {
+    await microbit.open();
+    const serialVote = new SerialVoteConnection(microbit);
+    serialVote.start(options.length, (votes) => {
+      show(template.content.getElementById("list")!, listTemplate(options, votes));
+    });
+  })();
   return template;
 }
 
