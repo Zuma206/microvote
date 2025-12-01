@@ -6,7 +6,7 @@
     "microphone": "*"
   },
   "files": [
-    "main.ts"
+    "src/main.ts"
   ],
   "public": false,
   "supportedTargets": [

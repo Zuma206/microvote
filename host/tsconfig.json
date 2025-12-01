@@ -1,9 +1,12 @@
 {
-    "compilerOptions": {
-        "target": "ES5",
-        "noImplicitAny": true,
-        "outDir": "built",
-        "rootDir": "."
-    },
-    "exclude": ["pxt_modules/**/*test.ts"]
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "moduleDetection": "auto",
+    "target": "ES5",
+    "outDir": "built",
+    "rootDir": "."
+  },
+  "exclude": [
+    "pxt_modules/**/*test.ts"
+  ]
 }

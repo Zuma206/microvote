@@ -10,7 +10,7 @@
     "pxt": "^0.5.1"
   },
   "scripts": {
-    "pxt": "pxt"
+    "build": "pxt build"
   },
   "dependencies": {
     "pxt-microbit": "^8.0.18"
