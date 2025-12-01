@@ -1,10 +1,9 @@
 import { Microbit } from "./microbit";
-import { randomInteger } from "./utils";
 
 type EventListener = (votes: number[]) => void;
 
 export class SerialVoteConnection {
-  private static id = randomInteger(0, Number.MAX_SAFE_INTEGER / 2);
+  private static id = 0;
 
   constructor(private readonly microbit: Microbit) {
     this.messageLoop();
@@ -18,7 +17,7 @@ export class SerialVoteConnection {
   private eventListener?: EventListener;
 
   async start(options: number, eventListener?: EventListener) {
-    if (this.currentVoteId !== null) await this.stop();
+    await this.stop();
     this.currentVoteId = SerialVoteConnection.id++;
     this.eventListener = eventListener;
     await this.sendMessage({
@@ -29,23 +28,22 @@ export class SerialVoteConnection {
   }
 
   async stop() {
-    if (this.currentVoteId)
-      await this.stopId(this.currentVoteId);
-  }
-
-  private async stopId(id: number) {
-    await this.sendMessage({
-      type: "stop",
-      id,
-    });
+    if (this.currentVoteId === null) return;
+    await this.stopId(this.currentVoteId);
     this.currentVoteId = null;
   }
 
+  private stopId(id: number) {
+    return this.sendMessage({
+      type: "stop",
+      id,
+    });
+  }
+
   private async messageLoop() {
-    if (!this.microbit.isOpen) this.microbit.open();
     while (true) {
       const message = await this.readMessage();
-      if (message.id == null || message.id != this.currentVoteId) {
+      if (this.currentVoteId == null || message.id != this.currentVoteId) {
         await this.stopId(message.id);
         continue;
       }
