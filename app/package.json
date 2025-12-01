@@ -7,6 +7,7 @@
     "email": "j.peedle@lancaster.ac.uk"
   },
   "devDependencies": {
+    "@microvote/serialvote": "file:../serialvote",
     "@types/w3c-web-serial": "^1.0.8",
     "typescript": "^5.9.3",
     "vite": "^7.1.12"

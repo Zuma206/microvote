@@ -2,6 +2,7 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "types": [
+      "@microvote/serialvote",
       "@types/w3c-web-serial"
     ],
     "noEmit": true
