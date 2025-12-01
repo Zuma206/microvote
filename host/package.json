@@ -7,13 +7,10 @@
     "email": "j.peedle@lancaster.ac.uk"
   },
   "devDependencies": {
-    "@microvote/serialvote": "file:../serialvote",
-    "pxt": "^0.5.1"
+    "makecode": "^1.3.5"
   },
   "scripts": {
-    "build": "pxt build"
-  },
-  "dependencies": {
-    "pxt-microbit": "^8.0.18"
+    "mkc": "mkc",
+    "build": "mkc build"
   }
 }
