@@ -5,5 +5,8 @@
   "author": {
     "name": "James Peedle",
     "email": "j.peedle@lancaster.ac.uk"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
   }
 }
