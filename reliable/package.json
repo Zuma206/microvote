@@ -5,5 +5,14 @@
   "author": {
     "name": "James Peedle",
     "email": "j.peedle@lancaster.ac.uk"
+  },
+  "devDependencies": {
+    "pxt": "^0.5.1"
+  },
+  "scripts": {
+    "pxt": "pxt"
+  },
+  "dependencies": {
+    "pxt-microbit": "^8.1.6"
   }
 }
