@@ -1,6 +1,9 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
+    "types": [
+      "@microvote/serialvote"
+    ],
     "moduleDetection": "auto",
     "target": "ES5",
     "outDir": "built",
