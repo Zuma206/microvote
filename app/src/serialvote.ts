@@ -1,6 +1,5 @@
 import { Microbit } from "./microbit";
 import { randomInteger } from "./utils";
-import "../../serialvote/types";
 
 type EventListener = (votes: number[]) => void;
 

@@ -1,8 +1,9 @@
 {
-  "include": [
-    "../tsconfig.json"
-  ],
+  "extends": "../tsconfig.json",
   "compilerOptions": {
+    "types": [
+      "@types/w3c-web-serial"
+    ],
     "noEmit": true
   }
 }
