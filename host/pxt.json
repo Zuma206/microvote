@@ -4,7 +4,7 @@
     "core": "*",
     "radio": "*",
     "microphone": "*",
-    "@microvote/reliable": "file:../reliable"
+    "@microvote/radiostack": "file:../radiostack"
   },
   "files": [
     "src/main.ts",

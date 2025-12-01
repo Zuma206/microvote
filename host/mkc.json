@@ -1,5 +1,5 @@
 {
   "links": {
-    "@microvote/reliable": "../reliable"
+    "@microvote/radiostack": "../radiostack"
   }
 }

@@ -1,6 +1,6 @@
 serial.setRxBufferSize(128);
 
-Reliable.sayHello();
+RadioStack.sayHello();
 
 const serialVote = new SerialVoteConnection();
 
