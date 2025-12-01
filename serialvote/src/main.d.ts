@@ -1,4 +1,4 @@
-namespace SerialVote {
+declare namespace SerialVote {
   type Message<T extends string, U extends object = {}> =
     { id: number, type: T } & U;
 

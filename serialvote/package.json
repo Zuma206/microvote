@@ -1,0 +1,13 @@
+{
+  "name": "@microvote/serialvote",
+  "private": true,
+  "types": "src/main.d.ts",
+  "license": "UNLICENSED",
+  "author": {
+    "name": "James Peedle",
+    "email": "j.peedle@lancaster.ac.uk"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}
