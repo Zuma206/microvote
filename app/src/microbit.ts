@@ -22,6 +22,8 @@ export class Microbit {
 
   async open() {
     await this.port.open({ baudRate: BAUD_RATE });
+    if (!this.port.readable || !this.port.writable)
+      throw new Error("Port is not readable and writable");
     this.reader = this.port.readable.getReader();
     this.writer = this.port.writable.getWriter();
   }
@@ -49,7 +51,7 @@ export class Microbit {
   }
 
   async writeLine(text: string) {
-    if (!this.reader) throw new Error("micro:bit written to before being opened");
+    if (!this.writer) throw new Error("micro:bit written to before being opened");
     await this.writer.write(this.textEncoder.encode(text + "\n"));
   }
 }

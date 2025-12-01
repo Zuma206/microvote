@@ -2,7 +2,7 @@ import { Microbit } from "./microbit";
 import { intToChar, show } from "./utils";
 
 export function resultsTemplate(
-  microbit: Microbit,
+  _: Microbit,
   title: string,
   options: string[]
 ) {
@@ -11,8 +11,8 @@ export function resultsTemplate(
     <h1 id="title"></h1>
     <ul id="list"></ul>
   `;
-  template.content.getElementById("title").innerText = title;
-  show(template.content.getElementById("list"), listTemplate(options, []))
+  template.content.getElementById("title")!.innerText = title;
+  show(template.content.getElementById("list")!, listTemplate(options, []))
   return template;
 }
 

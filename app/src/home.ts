@@ -9,7 +9,7 @@ export function homeTemplate(root: HTMLElement) {
     <button id="connect">Connect to the host Micro:Bit</button>
   `;
 
-  template.content.getElementById("connect").onclick = async function() {
+  template.content.getElementById("connect")!.onclick = async function() {
     const microbit = await Microbit.request();
     show(root, setupTemplate(root, microbit));
   }

@@ -1,6 +1,6 @@
 import { Microbit } from "./microbit";
-import "../../serialvote/types";
 import { randomInteger } from "./utils";
+import "../../serialvote/types";
 
 type EventListener = (votes: number[]) => void;
 
@@ -29,11 +29,12 @@ export class SerialVoteConnection {
     });
   }
 
-  stop() {
-    return this.stopId();
+  async stop() {
+    if (this.currentVoteId)
+      await this.stopId(this.currentVoteId);
   }
 
-  private async stopId(id: number = this.currentVoteId) {
+  private async stopId(id: number) {
     await this.sendMessage({
       type: "stop",
       id,

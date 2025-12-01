@@ -19,8 +19,8 @@ export function setupTemplate(root: HTMLElement, microbit: Microbit) {
   `;
 
   const option = template.content.getElementById("option") as HTMLInputElement;
-  const list = template.content.getElementById("list");
-  template.content.getElementById("add").onsubmit = function(e) {
+  const list = template.content.getElementById("list")!;
+  template.content.getElementById("add")!.onsubmit = function(e) {
     e.preventDefault();
     options.push(option.value);
     option.value = "";
