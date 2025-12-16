@@ -26,5 +26,12 @@ namespace Buffers {
     * @param offset the offset to decode at
     */
     abstract decodeAt(buffer: Buffer, offset: number): DecodeAtResult<T>;
+
+    /**
+    * Measures the size of a value once encoded 
+    * @param value the value to measure
+    * @returns the size (in bytes) the value will be once encoded
+    */
+    abstract measure(value: T): number;
   }
 }
