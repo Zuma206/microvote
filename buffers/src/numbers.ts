@@ -16,5 +16,9 @@ namespace Buffers {
       const value = buffer.getNumber(this.format, offset);
       return { value, read: this.byteSize };
     }
+
+    measure(_: number): number {
+      return this.byteSize;
+    }
   }
 }
