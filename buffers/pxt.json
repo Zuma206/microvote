@@ -1,12 +1,12 @@
 {
-  "name": "@microvote/buffers",
+  "name": "buffers",
   "dependencies": {
     "core": "*",
     "radio": "*",
     "microphone": "*"
   },
   "files": [],
-  "public": false,
+  "public": true,
   "supportedTargets": [
     "microbit"
   ],
