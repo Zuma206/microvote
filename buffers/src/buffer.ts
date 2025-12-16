@@ -25,7 +25,8 @@ namespace Buffers {
   }
 
   /**
-  * Encoding a buffer and it's length using a given length encoding
+  * Encoding a buffer and it's length using a given length encoding,
+  * which is uInt32LE by default.
   * Format: (length, ...buffer)
   * @param lengthEncoding the encoding to write the length with
   */

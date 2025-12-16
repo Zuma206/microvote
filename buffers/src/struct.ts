@@ -57,6 +57,11 @@ namespace Buffers {
     }
   }
 
+  /**
+  * Encodes and object-like struct into binary. Fields are encoded
+  * in the order they're passed into `struct`.
+  * Format: (field0, field1, field2, ...fields)
+  */
   export function struct<T extends Field[]>(...fields: T) {
     return new StructEncoding(fields);
   }
