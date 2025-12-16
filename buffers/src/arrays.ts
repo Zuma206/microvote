@@ -37,6 +37,7 @@ namespace Buffers {
 
   /**
   * Returns an encoding for an array of `T`
+  * Format: (length, ...values)
   * @param valueEncoding the encoding to encode the array's values with
   * @param lengthEncoding the encoding to encode the array's length with
   */
