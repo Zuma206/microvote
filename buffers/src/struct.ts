@@ -13,4 +13,51 @@ namespace Buffers {
   export function field<K extends string, T extends Encoding<any>>(key: K, encoding: T): Field<K, T> {
     return [key, encoding] as const;
   }
+
+  type ToObject<T extends Field[]> = {
+    [F in T[number]as F[0]]: F[1] extends Encoding<infer U> ? U : never;
+  };
+
+  class Struct<T extends Field[]> extends Encoding<ToObject<T>> {
+    private readonly fields: T;
+    constructor(fields: T) {
+      super();
+      this.fields = fields;
+    }
+
+    encodeAt(buffer: Buffer, offset: number, value: ToObject<T>): number {
+      let written = 0;
+      for (let i = 0; i < this.fields.length; i++) {
+        const [key, encoding] = this.fields[i];
+        const attribute = value[key as keyof ToObject<T>];
+        written += encoding.encodeAt(buffer, offset + written, attribute);
+      }
+      return written;
+    }
+
+    decodeAt(buffer: Buffer, offset: number): DecodeAtResult<ToObject<T>> {
+      const value = {} as ToObject<T>;
+      let read = 0;
+      for (let i = 0; i < this.fields.length; i++) {
+        const [key, encoding] = this.fields[i];
+        const result = encoding.decodeAt(buffer, offset + read);
+        value[key as keyof ToObject<T>] = result.value;
+        read += result.read;
+      }
+      return { value, read };
+    }
+
+    measure(value: ToObject<T>): number {
+      let size = 0;
+      for (let i = 0; i < this.fields.length; i++) {
+        const [key, encoding] = this.fields[i];
+        size += encoding.measure(value[key as keyof ToObject<T>]);
+      }
+      return size;
+    }
+  }
+
+  export function struct<T extends Field[]>(...fields: T) {
+    return new Struct(fields);
+  }
 }
