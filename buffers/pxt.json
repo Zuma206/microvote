@@ -1,14 +1,18 @@
 {
-    "name": "buffers",
-    "dependencies": {
-        "core": "*",
-        "radio": "*",
-        "microphone": "*"
-    },
-    "files": [],
-    "public": true,
-    "supportedTargets": [
-        "microbit"
-    ],
-    "preferredEditor": "blocksprj"
+  "name": "buffers",
+  "dependencies": {
+    "core": "*",
+    "radio": "*",
+    "microphone": "*"
+  },
+  "files": [
+    "src/arrays.ts",
+    "src/encoding.ts",
+    "src/numbers.ts"
+  ],
+  "public": true,
+  "supportedTargets": [
+    "microbit"
+  ],
+  "preferredEditor": "blocksprj"
 }
