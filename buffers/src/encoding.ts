@@ -33,5 +33,26 @@ namespace Buffers {
     * @returns the size (in bytes) the value will be once encoded
     */
     abstract measure(value: T): number;
+
+    /**
+    * Encodes a value into a buffer
+    * @param value the value to encode
+    * @returns a buffer containing a binary representation of the value
+    */
+    encode(value: T) {
+      const size = this.measure(value);
+      const buffer = pins.createBuffer(size);
+      this.encodeAt(buffer, 0, value);
+      return buffer;
+    }
+
+    /**
+    * Decodes a buffer into a value
+    * @param buffer the buffer containing the binary encoding of a value
+    * @returns the value that was encoded into the buffer
+    */
+    decode(buffer: Buffer) {
+      return this.decodeAt(buffer, 0).value;
+    }
   }
 }
