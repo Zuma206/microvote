@@ -1,25 +1,27 @@
 namespace Buffers {
   class ArrayEncoding<T> extends Encoding<T[]> {
     constructor(
-      private readonly valueEncoding: Encoding<T>,
-      private readonly lengthEncoding: Encoding<number> = uInt8LE
+      private readonly encoding: Encoding<T>,
+      private readonly length: number,
+      private readonly zero: T,
     ) {
       super();
     }
 
     encodeAt(buffer: Buffer, offset: number, value: T[]): number {
-      let written = this.lengthEncoding.encodeAt(buffer, offset, value.length);
-      for (let i = 0; i < value.length; i++) {
-        written += this.valueEncoding.encodeAt(buffer, offset + written, value[i]);
+      let written = 0;
+      for (let i = 0; i < this.length; i++) {
+        const item = i >= value.length ? this.zero : value[i];
+        written += this.encoding.encodeAt(buffer, offset + written, item);
       }
       return written;
     }
 
     decodeAt(buffer: Buffer, offset: number): DecodeAtResult<T[]> {
-      let { value: length, read } = this.lengthEncoding.decodeAt(buffer, offset);
       const value: T[] = [];
-      for (let i = 0; i < length; i++) {
-        const result = this.valueEncoding.decodeAt(buffer, offset + read);
+      let read = 0;
+      for (let i = 0; i < this.length; i++) {
+        const result = this.encoding.decodeAt(buffer, offset + read);
         value.push(result.value);
         read += result.read;
       }
@@ -27,21 +29,22 @@ namespace Buffers {
     }
 
     measure(value: T[]): number {
-      let size = this.lengthEncoding.measure(value.length);
+      let size = 0;
       for (let i = 0; i < value.length; i++) {
-        size += this.valueEncoding.measure(value[i]);
+        size += this.encoding.measure(value[i]);
       }
       return size;
     }
   }
 
   /**
-  * Returns an encoding for an array of `T`
-  * Format: (length, ...values)
-  * @param valueEncoding the encoding to encode the array's values with
-  * @param lengthEncoding the encoding to encode the array's length with
-  */
-  export function array<T>(valueEncoding: Encoding<T>, lengthEncoding?: Encoding<number>) {
-    return new ArrayEncoding(valueEncoding, lengthEncoding);
+   * Returns an encoding for a fixed-length array of `T`.
+   * Format: (value0, value1, ...values)
+   * @param encoding the encoding to use for elements
+   * @param length the length of the array
+   * @param zero the value to fill with if the provided array is too short
+   */
+  export function array<T>(encoding: Encoding<T>, length: number, zero: T) {
+    return new ArrayEncoding(encoding, length, zero);
   }
 }
