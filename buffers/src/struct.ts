@@ -14,50 +14,50 @@ namespace Buffers {
     return [key, encoding] as const;
   }
 
-  type ToObject<T extends Field[]> = {
+  type StructToObject<T extends Field[]> = {
     [F in T[number]as F[0]]: F[1] extends Encoding<infer U> ? U : never;
   };
 
-  class Struct<T extends Field[]> extends Encoding<ToObject<T>> {
+  class StructEncoding<T extends Field[]> extends Encoding<StructToObject<T>> {
     private readonly fields: T;
     constructor(fields: T) {
       super();
       this.fields = fields;
     }
 
-    encodeAt(buffer: Buffer, offset: number, value: ToObject<T>): number {
+    encodeAt(buffer: Buffer, offset: number, value: StructToObject<T>): number {
       let written = 0;
       for (let i = 0; i < this.fields.length; i++) {
         const [key, encoding] = this.fields[i];
-        const attribute = value[key as keyof ToObject<T>];
+        const attribute = value[key as keyof StructToObject<T>];
         written += encoding.encodeAt(buffer, offset + written, attribute);
       }
       return written;
     }
 
-    decodeAt(buffer: Buffer, offset: number): DecodeAtResult<ToObject<T>> {
-      const value = {} as ToObject<T>;
+    decodeAt(buffer: Buffer, offset: number): DecodeAtResult<StructToObject<T>> {
+      const value = {} as StructToObject<T>;
       let read = 0;
       for (let i = 0; i < this.fields.length; i++) {
         const [key, encoding] = this.fields[i];
         const result = encoding.decodeAt(buffer, offset + read);
-        value[key as keyof ToObject<T>] = result.value;
+        value[key as keyof StructToObject<T>] = result.value;
         read += result.read;
       }
       return { value, read };
     }
 
-    measure(value: ToObject<T>): number {
+    measure(value: StructToObject<T>): number {
       let size = 0;
       for (let i = 0; i < this.fields.length; i++) {
         const [key, encoding] = this.fields[i];
-        size += encoding.measure(value[key as keyof ToObject<T>]);
+        size += encoding.measure(value[key as keyof StructToObject<T>]);
       }
       return size;
     }
   }
 
   export function struct<T extends Field[]>(...fields: T) {
-    return new Struct(fields);
+    return new StructEncoding(fields);
   }
 }
