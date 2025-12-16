@@ -15,6 +15,17 @@ namespace Buffers {
       return written;
     }
 
+    decodeAt(buffer: Buffer, offset: number): DecodeAtResult<T[]> {
+      let { value: length, read } = this.lengthEncoding.decodeAt(buffer, offset);
+      const value: T[] = [];
+      for (let i = 0; i < length; i++) {
+        const result = this.valueEncoding.decodeAt(buffer, offset + read);
+        value.push(result.value);
+        read += result.read;
+      }
+      return { value, read };
+    }
+
     measure(value: T[]): number {
       let size = this.lengthEncoding.measure(value.length);
       for (let i = 0; i < value.length; i++) {
