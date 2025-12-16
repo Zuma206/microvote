@@ -1,0 +1,14 @@
+{
+  "name": "@microvote/buffers",
+  "dependencies": {
+    "core": "*",
+    "radio": "*",
+    "microphone": "*"
+  },
+  "files": [],
+  "public": false,
+  "supportedTargets": [
+    "microbit"
+  ],
+  "preferredEditor": "blocksprj"
+}
