@@ -8,7 +8,10 @@
   "files": [
     "src/arrays.ts",
     "src/encoding.ts",
-    "src/numbers.ts"
+    "src/flags.ts",
+    "src/numbers.ts",
+    "src/strings.ts",
+    "src/structs.ts"
   ],
   "public": true,
   "supportedTargets": [
