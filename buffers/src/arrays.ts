@@ -2,7 +2,7 @@ namespace Buffers {
   class ArrayEncoding<T> extends Encoding<T[]> {
     constructor(
       private readonly valueEncoding: Encoding<T>,
-      private readonly lengthEncoding: Encoding<number> = Int32LE
+      private readonly lengthEncoding: Encoding<number> = UInt32LE
     ) {
       super();
     }
