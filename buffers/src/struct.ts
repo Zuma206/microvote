@@ -14,7 +14,7 @@ namespace Buffers {
     return [key, encoding] as const;
   }
 
-  type StructToObject<T extends Field[]> = {
+  type StructToObject<T extends Field[]> = T extends [] ? { [K: string]: never } : {
     [F in T[number]as F[0]]: F[1] extends Encoding<infer U> ? U : never;
   };
 
