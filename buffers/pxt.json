@@ -1,14 +1,14 @@
 {
-  "name": "buffers",
-  "dependencies": {
-    "core": "*",
-    "radio": "*",
-    "microphone": "*"
-  },
-  "files": [],
-  "public": true,
-  "supportedTargets": [
-    "microbit"
-  ],
-  "preferredEditor": "blocksprj"
+    "name": "buffers",
+    "dependencies": {
+        "core": "*",
+        "radio": "*",
+        "microphone": "*"
+    },
+    "files": [],
+    "public": true,
+    "supportedTargets": [
+        "microbit"
+    ],
+    "preferredEditor": "blocksprj"
 }
