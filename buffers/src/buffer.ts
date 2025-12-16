@@ -1,6 +1,6 @@
 namespace Buffers {
   class BufferEncoding extends Encoding<Buffer> {
-    constructor(private readonly lengthEncoding: Encoding<number> = UInt32LE) {
+    constructor(private readonly lengthEncoding: Encoding<number> = uInt32LE) {
       super();
     }
 

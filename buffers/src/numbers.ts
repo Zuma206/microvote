@@ -26,20 +26,20 @@ namespace Buffers {
   }
 
   // `NumberEncoding` definitions for every one of the micro:bit's `NumberFormat` enums
-  export const UInt8BE = new NumberEncoding(NumberFormat.UInt8BE, 8);
-  export const UInt8LE = new NumberEncoding(NumberFormat.UInt8LE, 8);
-  export const UInt16BE = new NumberEncoding(NumberFormat.UInt16BE, 16);
-  export const UInt16LE = new NumberEncoding(NumberFormat.UInt16LE, 16);
-  export const UInt32BE = new NumberEncoding(NumberFormat.UInt32BE, 32);
-  export const UInt32LE = new NumberEncoding(NumberFormat.UInt32LE, 32);
-  export const Int8BE = new NumberEncoding(NumberFormat.Int8BE, 8);
-  export const Int8LE = new NumberEncoding(NumberFormat.Int8LE, 8);
-  export const Int16BE = new NumberEncoding(NumberFormat.Int16BE, 16);
-  export const Int16LE = new NumberEncoding(NumberFormat.Int16LE, 16);
-  export const Int32BE = new NumberEncoding(NumberFormat.Int32BE, 32);
-  export const Int32LE = new NumberEncoding(NumberFormat.Int32LE, 32);
-  export const Float32BE = new NumberEncoding(NumberFormat.Float32BE, 32);
-  export const Float32LE = new NumberEncoding(NumberFormat.Float32LE, 32);
-  export const Float64BE = new NumberEncoding(NumberFormat.Float64BE, 64);
-  export const Float64LE = new NumberEncoding(NumberFormat.Float64LE, 64);
+  export const uInt8BE = new NumberEncoding(NumberFormat.UInt8BE, 8);
+  export const uInt8LE = new NumberEncoding(NumberFormat.UInt8LE, 8);
+  export const uInt16BE = new NumberEncoding(NumberFormat.UInt16BE, 16);
+  export const uInt16LE = new NumberEncoding(NumberFormat.UInt16LE, 16);
+  export const uInt32BE = new NumberEncoding(NumberFormat.UInt32BE, 32);
+  export const uInt32LE = new NumberEncoding(NumberFormat.UInt32LE, 32);
+  export const int8BE = new NumberEncoding(NumberFormat.Int8BE, 8);
+  export const int8LE = new NumberEncoding(NumberFormat.Int8LE, 8);
+  export const int16BE = new NumberEncoding(NumberFormat.Int16BE, 16);
+  export const int16LE = new NumberEncoding(NumberFormat.Int16LE, 16);
+  export const int32BE = new NumberEncoding(NumberFormat.Int32BE, 32);
+  export const int32LE = new NumberEncoding(NumberFormat.Int32LE, 32);
+  export const float32BE = new NumberEncoding(NumberFormat.Float32BE, 32);
+  export const float32LE = new NumberEncoding(NumberFormat.Float32LE, 32);
+  export const float64BE = new NumberEncoding(NumberFormat.Float64BE, 64);
+  export const float64LE = new NumberEncoding(NumberFormat.Float64LE, 64);
 }
