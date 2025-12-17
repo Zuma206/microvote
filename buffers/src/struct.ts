@@ -76,6 +76,6 @@ namespace Buffers {
   * Format: (field0, field1, field2, ...fields)
   */
   export function struct<T extends StructSchema>(structSchema: T) {
-    return new StructEncoding(structSchema);
+    return new Encoding(new StructEncoding(structSchema));
   }
 }

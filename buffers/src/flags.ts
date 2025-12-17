@@ -78,6 +78,6 @@ namespace Buffers {
   * Encodes of up to 8 string flags into a single byte
   */
   export function flags<T extends FlagsSchema>(flagsSchema: T) {
-    return new FlagEncoding(flagsSchema);
+    return new Encoding(new FlagEncoding(flagsSchema));
   }
 }

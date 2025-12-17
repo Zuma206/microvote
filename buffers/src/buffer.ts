@@ -31,6 +31,6 @@ namespace Buffers {
   * @param lengthEncoding the encoding to write the length with
   */
   export function buffer(lengthEncoding?: EncodingImpl<number>) {
-    return new BufferEncoding(lengthEncoding);
+    return new Encoding(new BufferEncoding(lengthEncoding));
   }
 }

@@ -44,6 +44,6 @@ namespace Buffers {
    * @param zero the value to fill with if the provided array is too short
    */
   export function array<T>(encoding: EncodingImpl<T>, length: number) {
-    return new ArrayEncoding(encoding, length);
+    return new Encoding(new ArrayEncoding(encoding, length));
   }
 }

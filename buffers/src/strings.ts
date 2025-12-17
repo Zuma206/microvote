@@ -3,6 +3,8 @@ namespace Buffers {
     public readonly zero: string = "\0";
     private static encoding = uInt8LE;
 
+    constructor() { }
+
     encodeAt(buffer: Buffer, offset: number, value: string): number {
       return CharEncoding.encoding.encodeAt(buffer, offset, value.charCodeAt(0));
     }

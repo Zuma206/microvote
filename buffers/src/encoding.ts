@@ -44,4 +44,24 @@ namespace Buffers {
     */
     readonly zero: T;
   }
+
+  export class Encoding<T> implements EncodingImpl<T> {
+    constructor(private readonly impl: EncodingImpl<T>) { }
+
+    encodeAt(buffer: Buffer, offset: number, value: T): number {
+      return this.impl.encodeAt(buffer, offset, value);
+    }
+
+    decodeAt(buffer: Buffer, offset: number): DecodeAtResult<T> {
+      return this.impl.decodeAt(buffer, offset);
+    }
+
+    measure(value: T): number {
+      return this.impl.measure(value);
+    }
+
+    get zero() {
+      return this.impl.zero;
+    }
+  }
 }
