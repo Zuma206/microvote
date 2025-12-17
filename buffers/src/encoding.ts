@@ -35,6 +35,11 @@ namespace Buffers {
     abstract measure(value: T): number;
 
     /**
+    * A default/zero value for the encoded type
+    */
+    abstract readonly zero: T;
+
+    /**
     * Encodes a value into a buffer
     * @param value the value to encode
     * @returns a buffer containing a binary representation of the value

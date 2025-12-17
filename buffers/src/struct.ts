@@ -19,10 +19,15 @@ namespace Buffers {
   };
 
   class StructEncoding<T extends Field[]> extends Encoding<StructToObject<T>> {
+    public readonly zero = {} as StructToObject<T>;
     private readonly fields: T;
+
     constructor(fields: T) {
       super();
       this.fields = fields;
+      for (let i = 0; i < this.fields.length; i++) {
+        this.zero[this.fields[i][0]] = this.fields[i][1].zero;
+      }
     }
 
     encodeAt(buffer: Buffer, offset: number, value: StructToObject<T>): number {

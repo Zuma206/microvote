@@ -1,5 +1,7 @@
 namespace Buffers {
   class BufferEncoding extends Encoding<Buffer> {
+    public readonly zero: Buffer = pins.createBuffer(0);
+
     constructor(private readonly lengthEncoding: Encoding<number> = uInt32LE) {
       super();
     }

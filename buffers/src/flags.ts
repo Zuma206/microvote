@@ -25,6 +25,7 @@ namespace Buffers {
   }
 
   class FlagEncoding<T extends FlagsSchema> extends Encoding<FlagsToObject<T>> {
+    public readonly zero: FlagsToObject<T> = {};
     private static readonly encoding = uInt8LE;
     private static readonly flagsPerByte = 8;
     private readonly flags: Flag[];

@@ -1,9 +1,10 @@
 namespace Buffers {
   class ArrayEncoding<T> extends Encoding<T[]> {
+    public readonly zero: T[] = [];
+
     constructor(
       private readonly encoding: Encoding<T>,
       private readonly length: number,
-      private readonly zero: T,
     ) {
       super();
     }
@@ -11,7 +12,7 @@ namespace Buffers {
     encodeAt(buffer: Buffer, offset: number, value: T[]): number {
       let written = 0;
       for (let i = 0; i < this.length; i++) {
-        const item = i >= value.length ? this.zero : value[i];
+        const item = i >= value.length ? this.encoding.zero : value[i];
         written += this.encoding.encodeAt(buffer, offset + written, item);
       }
       return written;
@@ -44,7 +45,7 @@ namespace Buffers {
    * @param length the length of the array
    * @param zero the value to fill with if the provided array is too short
    */
-  export function array<T>(encoding: Encoding<T>, length: number, zero: T) {
-    return new ArrayEncoding(encoding, length, zero);
+  export function array<T>(encoding: Encoding<T>, length: number) {
+    return new ArrayEncoding(encoding, length);
   }
 }

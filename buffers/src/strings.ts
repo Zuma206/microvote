@@ -1,5 +1,6 @@
 namespace Buffers {
   class CharEncoding extends Encoding<string> {
+    public readonly zero: string = "\0";
     private static encoding = uInt8LE;
 
     encodeAt(buffer: Buffer, offset: number, value: string): number {
@@ -23,10 +24,12 @@ namespace Buffers {
 
   class StringEncoding extends Encoding<string> {
     private readonly encoding: Encoding<string[]>;
+    private static readonly encoding = char;
+    public readonly zero: string = "";
 
-    constructor(length: number, padding = "\0") {
+    constructor(length: number) {
       super();
-      this.encoding = array(char, length, padding);
+      this.encoding = array(StringEncoding.encoding, length);
     }
 
     encodeAt(buffer: Buffer, offset: number, value: string): number {
@@ -49,7 +52,7 @@ namespace Buffers {
    * @param length the max-length of the string
    * @param optional padding character for strings smaller than `max-length`, defaults to `'\0'`
    */
-  export function string(length: number, padding?: string) {
-    return new StringEncoding(length, padding);
+  export function string(length: number) {
+    return new StringEncoding(length);
   }
 }

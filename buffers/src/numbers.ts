@@ -4,6 +4,7 @@ namespace Buffers {
   */
   class NumberEncoding extends Encoding<number> {
     private readonly byteSize: number;
+    public readonly zero: number = 0;
 
     constructor(private readonly format: NumberFormat, bitSize: number) {
       super();
