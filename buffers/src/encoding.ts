@@ -7,6 +7,11 @@ namespace Buffers {
     value: T;
   }
 
+  export interface EncodingWithOrder<T> {
+    encoding: Encoding<T>;
+    order: number;
+  }
+
   /**
   * An object capable of encoding and decoding `T` into binary using a given encoding
   */
@@ -58,6 +63,14 @@ namespace Buffers {
     */
     decode(buffer: Buffer) {
       return this.decodeAt(buffer, 0).value;
+    }
+
+    /**
+    * Attaches an order to the encoding, so that multi-value data structures
+    * can encode values in the correct order.
+    */
+    order(order: number): EncodingWithOrder<T> {
+      return { encoding: this, order };
     }
   }
 }
