@@ -1,48 +1,83 @@
 namespace Buffers {
-  type FlagToObject<T extends string[]> = {
-    [K in T[number]]?: boolean;
+  type FlagsSchema = {
+    [K: string]: number;
   }
 
-  class FlagEncoding<T extends string[]> extends Encoding<FlagToObject<T>> {
+  type FlagsToObject<T extends FlagsSchema> = {
+    [K in keyof T]?: boolean;
+  }
+
+  type Flag = { key: string, order: number };
+
+  function sortStrings(a: string, b: string) {
+    for (let i = 0; i < a.length && i < b.length; i++) {
+      const charA = a.charCodeAt(i), charB = b.charCodeAt(i);
+      if (charA < charB) return -1;
+      else if (charA > charB) return 1;
+    }
+    return 0;
+  }
+
+  function sortFlags(a: Flag, b: Flag) {
+    if (a.order < b.order) return -1;
+    else if (a.order > b.order) return 1;
+    return sortStrings(a.key, b.key);
+  }
+
+  class FlagEncoding<T extends FlagsSchema> extends Encoding<FlagsToObject<T>> {
     private static readonly encoding = uInt8LE;
+    private static readonly flagsPerByte = 8;
+    private readonly flags: Flag[];
+    private readonly bytes: number;
 
-    constructor(private readonly flags: T) {
+    constructor(flagSchema: T) {
       super();
-      if (flags.length > 8) {
-        throw `exceeded max flags (8) with ${flags.length}`;
-      }
+      this.flags = Object.keys(flagSchema)
+        .map(key => ({ key, order: flagSchema[key] }))
+        .sort(sortFlags);
+      this.bytes = Math.ceil(this.flags.length / 8);
     }
 
-    encodeAt(buffer: Buffer, offset: number, value: FlagToObject<T>): number {
-      let flags = 0;
-      for (let i = 0; i < this.flags.length; i++) {
-        const mask = Math.pow(2, i);
-        const enabled = value[this.flags[i] as keyof FlagToObject<T>] == true;
-        flags |= enabled ? mask : 0;
+    encodeAt(buffer: Buffer, offset: number, value: FlagsToObject<T>): number {
+      let written = 0;
+      for (let byte = 0; byte < this.bytes; byte++) {
+        let flags = 0;
+        for (let flagInByte = 0, flag = byte * FlagEncoding.flagsPerByte;
+          flag < this.flags.length; flag++, flagInByte++) {
+          const mask = Math.pow(2, flagInByte);
+          const enabled = value[this.flags[flag].key] == true;
+          flags |= enabled ? mask : 0;
+        }
+        written += FlagEncoding.encoding.encodeAt(buffer, offset + written, flags);
       }
-      return FlagEncoding.encoding.encodeAt(buffer, offset, flags);
+      return written;
     }
 
-    decodeAt(buffer: Buffer, offset: number): DecodeAtResult<FlagToObject<T>> {
-      const { value: flags, read } = FlagEncoding.encoding.decodeAt(buffer, offset);
-      const value = {} as FlagToObject<T>;
-      for (let i = 0; i < this.flags.length; i++) {
-        const mask = Math.pow(2, i);
-        const enabled = (flags & mask) == mask;
-        value[this.flags[i] as keyof FlagToObject<T>] = enabled;
+    decodeAt(buffer: Buffer, offset: number): DecodeAtResult<FlagsToObject<T>> {
+      const value = {} as FlagsToObject<T>;
+      let read = 0;
+      for (let byte = 0; byte < this.bytes; byte++) {
+        const result = FlagEncoding.encoding.decodeAt(buffer, offset + read);
+        for (let flagInByte = 0, flag = byte * FlagEncoding.flagsPerByte;
+          flag < this.flags.length; flagInByte++, flag++) {
+          const mask = Math.pow(2, flag);
+          const enabled = (result.value & mask) == mask;
+          value[this.flags[flag].key as keyof FlagsToObject<T>] = enabled;
+        }
+        read += result.read;
       }
       return { value, read };
     }
 
-    measure(_: FlagToObject<T>): number {
-      return FlagEncoding.encoding.measure(0);
+    measure(_: FlagsToObject<T>): number {
+      return this.bytes;
     }
   }
 
   /**
   * Encodes of up to 8 string flags into a single byte
   */
-  export function flags<T extends string[]>(...flags: T) {
-    return new FlagEncoding(flags);
+  export function flags<T extends FlagsSchema>(flagsSchema: T) {
+    return new FlagEncoding(flagsSchema);
   }
 }
