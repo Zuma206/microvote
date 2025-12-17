@@ -18,7 +18,7 @@ namespace Buffers {
       for (let i = 0; i < this.flags.length; i++) {
         const mask = Math.pow(2, i);
         const enabled = value[this.flags[i] as keyof FlagToObject<T>] == true;
-        flags &= enabled ? mask : 0;
+        flags |= enabled ? mask : 0;
       }
       return FlagEncoding.encoding.encodeAt(buffer, offset, flags);
     }
