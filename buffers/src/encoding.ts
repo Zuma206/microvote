@@ -67,7 +67,7 @@ namespace Buffers {
     * @returns the value that was encoded into the buffer
     */
     decode(buffer: Buffer) {
-      return this.impl.decodeAt(buffer, 0);
+      return this.impl.decodeAt(buffer, 0).value;
     }
 
     /**
@@ -78,7 +78,8 @@ namespace Buffers {
     encode(value: T) {
       const size = this.impl.measure(value);
       const buffer = pins.createBuffer(size);
-      return this.impl.encodeAt(buffer, 0, value);
+      this.impl.encodeAt(buffer, 0, value);
+      return buffer;
     }
 
     /**
