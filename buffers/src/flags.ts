@@ -1,21 +1,16 @@
 namespace Buffers {
-  type MaxLenArray<
-    T,
-    N extends number,
-    R extends T[] = []
-  > = R['length'] extends N ? R : R | MaxLenArray<T, N, [...R, T]>;
-
-  type FlagKeys = MaxLenArray<string, 8>;
-
-  type FlagToObject<T extends FlagKeys> = {
+  type FlagToObject<T extends string[]> = {
     [K in T[number]]?: boolean;
   }
 
-  class FlagEncoding<T extends FlagKeys> extends Encoding<FlagToObject<T>> {
+  class FlagEncoding<T extends string[]> extends Encoding<FlagToObject<T>> {
     private static readonly encoding = uInt8LE;
 
     constructor(private readonly flags: T) {
       super();
+      if (flags.length > 8) {
+        throw `exceeded max flags (8) with ${flags.length}`;
+      }
     }
 
     encodeAt(buffer: Buffer, offset: number, value: FlagToObject<T>): number {
@@ -47,7 +42,7 @@ namespace Buffers {
   /**
   * Encodes of up to 8 string flags into a single byte
   */
-  export function flags<T extends FlagKeys>(...flags: T) {
+  export function flags<T extends string[]>(...flags: T) {
     return new FlagEncoding(flags);
   }
 }
