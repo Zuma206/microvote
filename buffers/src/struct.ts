@@ -1,41 +1,50 @@
 namespace Buffers {
-  type Field<
-    K extends string = string,
-    T extends Encoding<any> = Encoding<any>
-  > = readonly [K, T];
-
-  /**
-  * Represents an encoding mapped to a string key
-  * @param key the key to map the given encoding to
-  * @param encoding the encoding to map to the given key
-  * @returns a tuple containing the key and it's corresponding encoding
-  */
-  export function field<K extends string, T extends Encoding<any>>(key: K, encoding: T): Field<K, T> {
-    return [key, encoding] as const;
-  }
-
-  type StructToObject<T extends Field[]> = T extends [] ? { [K: string]: never } : {
-    [F in T[number]as F[0]]: F[1] extends Encoding<infer U> ? U : never;
+  type StructSchema = {
+    [K: string]: EncodingWithOrder<any>;
   };
 
-  class StructEncoding<T extends Field[]> extends Encoding<StructToObject<T>> {
-    public readonly zero = {} as StructToObject<T>;
-    private readonly fields: T;
+  type StructToObject<T extends StructSchema> = {
+    [K in keyof T]: T[K]["encoding"]["zero"];
+  }
 
-    constructor(fields: T) {
+  type StructField = { key: string, encoding: EncodingWithOrder<any> };
+
+  function sortStrings(a: string, b: string) {
+    for (let i = 0; i < a.length && i < b.length; i++) {
+      const charA = a.charCodeAt(i), charB = b.charCodeAt(i);
+      if (charA < charB) return -1;
+      if (charA > charB) return 1;
+    }
+    return 0;
+  }
+
+  function sortStructFields(a: StructField, b: StructField) {
+    if (a.encoding.order < b.encoding.order) return -1;
+    else if (a.encoding.order > b.encoding.order) return 1;
+    return sortStrings(a.key, b.key);
+  }
+
+  class StructEncoding<T extends StructSchema> extends Encoding<StructToObject<T>> {
+    public readonly zero = {} as StructToObject<T>;
+    private readonly fields: StructField[];
+
+    constructor(structSchema: T) {
       super();
-      this.fields = fields;
+      this.fields = Object.keys(structSchema)
+        .map((key) => ({ key, encoding: structSchema[key] }))
+        .sort(sortStructFields);
       for (let i = 0; i < this.fields.length; i++) {
-        this.zero[this.fields[i][0]] = this.fields[i][1].zero;
+        const field = this.fields[i];
+        this.zero[field.key as keyof StructToObject<T>] = field.encoding.encoding.zero;
       }
     }
 
     encodeAt(buffer: Buffer, offset: number, value: StructToObject<T>): number {
       let written = 0;
       for (let i = 0; i < this.fields.length; i++) {
-        const [key, encoding] = this.fields[i];
-        const attribute = value[key as keyof StructToObject<T>];
-        written += encoding.encodeAt(buffer, offset + written, attribute);
+        const field = this.fields[i];
+        const attribute = value[field.key as keyof StructToObject<T>];
+        written += field.encoding.encoding.encodeAt(buffer, offset + written, attribute);
       }
       return written;
     }
@@ -44,9 +53,9 @@ namespace Buffers {
       const value = {} as StructToObject<T>;
       let read = 0;
       for (let i = 0; i < this.fields.length; i++) {
-        const [key, encoding] = this.fields[i];
-        const result = encoding.decodeAt(buffer, offset + read);
-        value[key as keyof StructToObject<T>] = result.value;
+        const field = this.fields[i];
+        const result = field.encoding.encoding.decodeAt(buffer, offset + read);
+        value[field.key as keyof StructToObject<T>] = result.value;
         read += result.read;
       }
       return { value, read };
@@ -55,8 +64,8 @@ namespace Buffers {
     measure(value: StructToObject<T>): number {
       let size = 0;
       for (let i = 0; i < this.fields.length; i++) {
-        const [key, encoding] = this.fields[i];
-        size += encoding.measure(value[key as keyof StructToObject<T>]);
+        const field = this.fields[i];
+        size += field.encoding.encoding.measure(value[field.key as keyof StructToObject<T>]);
       }
       return size;
     }
@@ -67,7 +76,7 @@ namespace Buffers {
   * in the order they're passed into `struct`.
   * Format: (field0, field1, field2, ...fields)
   */
-  export function struct<T extends Field[]>(...fields: T) {
-    return new StructEncoding(fields);
+  export function struct<T extends StructSchema>(structSchema: T) {
+    return new StructEncoding(structSchema);
   }
 }
