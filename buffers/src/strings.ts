@@ -1,5 +1,5 @@
 namespace Buffers {
-  class CharEncoding extends Encoding<string> {
+  class CharEncoding implements EncodingImpl<string> {
     public readonly zero: string = "\0";
     private static encoding = uInt8LE;
 
@@ -22,13 +22,12 @@ namespace Buffers {
     */
   export const char = new CharEncoding();
 
-  class StringEncoding extends Encoding<string> {
-    private readonly encoding: Encoding<string[]>;
+  class StringEncoding implements EncodingImpl<string> {
+    private readonly encoding: EncodingImpl<string[]>;
     private static readonly encoding = char;
     public readonly zero: string = "";
 
     constructor(length: number) {
-      super();
       this.encoding = array(StringEncoding.encoding, length);
     }
 

@@ -24,12 +24,11 @@ namespace Buffers {
     return sortStrings(a.key, b.key);
   }
 
-  class StructEncoding<T extends StructSchema> extends Encoding<StructToObject<T>> {
+  class StructEncoding<T extends StructSchema> implements EncodingImpl<StructToObject<T>> {
     public readonly zero = {} as StructToObject<T>;
     private readonly fields: StructField[];
 
     constructor(structSchema: T) {
-      super();
       this.fields = Object.keys(structSchema)
         .map((key) => ({ key, encoding: structSchema[key] }))
         .sort(sortStructFields);

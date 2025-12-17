@@ -2,12 +2,11 @@ namespace Buffers {
   /**
   * Wraps the micro:bit's `NumberFormat` enums to fit `Encoding<number>`
   */
-  class NumberEncoding extends Encoding<number> {
+  class NumberEncoding implements EncodingImpl<number> {
     private readonly byteSize: number;
     public readonly zero: number = 0;
 
     constructor(private readonly format: NumberFormat, bitSize: number) {
-      super();
       this.byteSize = bitSize / 8;
     }
 

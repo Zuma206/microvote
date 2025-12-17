@@ -1,10 +1,8 @@
 namespace Buffers {
-  class BufferEncoding extends Encoding<Buffer> {
+  class BufferEncoding implements EncodingImpl<Buffer> {
     public readonly zero: Buffer = pins.createBuffer(0);
 
-    constructor(private readonly lengthEncoding: Encoding<number> = uInt32LE) {
-      super();
-    }
+    constructor(private readonly lengthEncoding: EncodingImpl<number> = uInt32LE) { }
 
     encodeAt(buffer: Buffer, offset: number, value: Buffer): number {
       const lengthWritten = this.lengthEncoding.encodeAt(buffer, offset, value.length);
@@ -32,7 +30,7 @@ namespace Buffers {
   * Format: (length, ...buffer)
   * @param lengthEncoding the encoding to write the length with
   */
-  export function buffer(lengthEncoding?: Encoding<number>) {
+  export function buffer(lengthEncoding?: EncodingImpl<number>) {
     return new BufferEncoding(lengthEncoding);
   }
 }

@@ -24,7 +24,7 @@ namespace Buffers {
     return sortStrings(a.key, b.key);
   }
 
-  class FlagEncoding<T extends FlagsSchema> extends Encoding<FlagsToObject<T>> {
+  class FlagEncoding<T extends FlagsSchema> implements EncodingImpl<FlagsToObject<T>> {
     public readonly zero: FlagsToObject<T> = {};
     private static readonly encoding = uInt8LE;
     private static readonly flagsPerByte = 8;
@@ -32,7 +32,6 @@ namespace Buffers {
     private readonly bytes: number;
 
     constructor(flagSchema: T) {
-      super();
       this.flags = Object.keys(flagSchema)
         .map(key => ({ key, order: flagSchema[key] }))
         .sort(sortFlags);

@@ -1,13 +1,11 @@
 namespace Buffers {
-  class ArrayEncoding<T> extends Encoding<T[]> {
+  class ArrayEncoding<T> implements EncodingImpl<T[]> {
     public readonly zero: T[] = [];
 
     constructor(
-      private readonly encoding: Encoding<T>,
+      private readonly encoding: EncodingImpl<T>,
       private readonly length: number,
-    ) {
-      super();
-    }
+    ) { }
 
     encodeAt(buffer: Buffer, offset: number, value: T[]): number {
       let written = 0;
@@ -45,7 +43,7 @@ namespace Buffers {
    * @param length the length of the array
    * @param zero the value to fill with if the provided array is too short
    */
-  export function array<T>(encoding: Encoding<T>, length: number) {
+  export function array<T>(encoding: EncodingImpl<T>, length: number) {
     return new ArrayEncoding(encoding, length);
   }
 }
