@@ -11,7 +11,7 @@
     "src/flags.ts",
     "src/numbers.ts",
     "src/strings.ts",
-    "src/structs.ts"
+    "src/struct.ts"
   ],
   "public": true,
   "supportedTargets": [
