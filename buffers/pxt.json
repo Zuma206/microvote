@@ -14,7 +14,8 @@
     "src/struct.ts"
   ],
   "testFiles": [
-    "tests/testing.ts"
+    "tests/testing.ts",
+    "tests/cases.ts"
   ],
   "public": true,
   "supportedTargets": [
