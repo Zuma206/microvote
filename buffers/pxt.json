@@ -13,6 +13,9 @@
     "src/strings.ts",
     "src/struct.ts"
   ],
+  "testFiles": [
+    "tests/testing.ts"
+  ],
   "public": true,
   "supportedTargets": [
     "microbit"
