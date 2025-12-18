@@ -22,7 +22,7 @@ namespace Buffers {
   /**
     * Encodes a char (string with length 1) as an ASCII uInt8LE
     */
-  export const char = new CharEncoding();
+  export const char = new Encoding(new CharEncoding());
 
   class StringEncoding implements EncodingImpl<string> {
     private readonly encoding: EncodingImpl<string[]>;
@@ -54,6 +54,6 @@ namespace Buffers {
    * @param optional padding character for strings smaller than `max-length`, defaults to `'\0'`
    */
   export function string(length: number) {
-    return new StringEncoding(length);
+    return new Encoding(new StringEncoding(length));
   }
 }
