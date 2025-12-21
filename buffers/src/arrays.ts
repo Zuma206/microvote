@@ -29,8 +29,9 @@ namespace Buffers {
 
     measure(value: T[]): number {
       let size = 0;
-      for (let i = 0; i < value.length; i++) {
-        size += this.encoding.measure(value[i]);
+      for (let i = 0; i < this.length; i++) {
+        const item = i < value.length ? value[i] : this.encoding.zero;
+        size += this.encoding.measure(item);
       }
       return size;
     }
