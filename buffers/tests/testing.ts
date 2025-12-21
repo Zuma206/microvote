@@ -1,61 +1,37 @@
 namespace Tests {
-  function assertDeepEqual<T>(name: string, value: T, expected: T) {
-    control.assert(typeof value == typeof expected,
-      `${name} was of type ${typeof value}, type of ${typeof expected} was expected`);
-    if (typeof value == "object" && value != null) {
-      const keys = Object.keys(value).concat(Object.keys(expected));
+  function assertDeepEqual<T>(name: string, actual: T, expected: T) {
+    control.assert(typeof actual == typeof expected,
+      `${name} was of type ${typeof actual}, type of ${typeof expected} was expected`);
+    if (typeof actual == "object" && actual != null) {
+      const keys = Object.keys(actual).concat(Object.keys(expected));
       for (let i = 0; i < keys.length; i++) {
-        const key = keys[i] as keyof typeof value & keyof typeof expected & string;
-        assertDeepEqual(`${name}.${key}`, value[key], expected[key]);
+        const key = keys[i] as keyof typeof actual & keyof typeof expected & string;
+        assertDeepEqual(`${name}.${key}`, actual[key], expected[key]);
       }
     } else {
-      control.assert(value == expected,
-        `${name} was ${value}, expected ${expected}`);
+      control.assert(actual == expected,
+        `${name} was ${actual}, expected ${expected}`);
     }
   }
 
-  export function testEncoding<T>(name: string, encoding: Buffers.Encoding<T>, value: T) {
-    const buffer = encoding.encode(value);
-    const result = encoding.decode(buffer);
-    assertDeepEqual(name, value, result);
+  type TestValuesOptions<T> = {
+    encodings: { [K: string]: Buffers.Encoding<T> };
+    toExpected?: (value: T) => T;
+    values: T[];
   }
 
-  export function encodingTests<T>(name: string, encoding: Buffers.Encoding<T>, values: T[]) {
-    for (let i = 0; i < values.length; i++) {
-      testEncoding(name, encoding, values[i]);
+  export function testValues<T>(options: TestValuesOptions<T>) {
+    const encodingNames = Object.keys(options.encodings);
+    for (let i = 0; i < encodingNames.length; i++) {
+      const encodingName = encodingNames[i];
+      const encoding = options.encodings[encodingName];
+      for (let j = 0; j < options.values.length; j++) {
+        const value = options.values[j];
+        const buffer = encoding.encode(value);
+        const expected = options.toExpected ? options.toExpected(value) : value;
+        const actual = encoding.decode(buffer);
+        assertDeepEqual(encodingName, actual, expected);
+      }
     }
-  }
-
-  export function range(first: number, last: number, percent = 1) {
-    const numbers: number[] = [];
-    for (let i = first; i <= last; i += 1 / percent)
-      numbers.push(i);
-    return numbers;
-  }
-
-  export function encodingsTests<T>(encodings: { [K: string]: Buffers.Encoding<any> }, values: T[]) {
-    const keys = Object.keys(encodings);
-    for (let i = 0; i < keys.length; i++) {
-      const key = keys[i];
-      encodingTests(key, encodings[key], values);
-    }
-  }
-
-  export function randIntRange(min: number, max: number, length: number) {
-    const numbers = [min, max];
-    while (numbers.length < length) {
-      numbers.push(Math.randomRange(min + 1, max - 1));
-    }
-    return numbers;
-  }
-
-  export function randFloatRange(min: number, max: number, length: number) {
-    const numbers = [min, max];
-    while (numbers.length < length) {
-      const whole = Math.randomRange(min + 1, max - 1);
-      const fraction = Math.min(Math.random(), 0.9999999999999999);
-      numbers.push(whole + fraction);
-    }
-    return numbers;
   }
 }
