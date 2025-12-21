@@ -29,15 +29,14 @@ namespace Buffers {
     return new Encoding(new NumberEncoding(format, bitSize));
   }
 
-  // `NumberEncoding` definitions for every one of the micro:bit's `NumberFormat` enums
-  export const uInt8BE = numberEncoding(NumberFormat.UInt8BE, 8);
-  export const uInt8LE = numberEncoding(NumberFormat.UInt8LE, 8);
+  // NumberEncoding definitions for every one of the micro:bit's NumberFormat enums
+  // No endianness for single byte (8-bit) types to avoid confusion
+  export const uInt8 = numberEncoding(NumberFormat.UInt8LE, 8);
   export const uInt16BE = numberEncoding(NumberFormat.UInt16BE, 16);
   export const uInt16LE = numberEncoding(NumberFormat.UInt16LE, 16);
   export const uInt32BE = numberEncoding(NumberFormat.UInt32BE, 32);
   export const uInt32LE = numberEncoding(NumberFormat.UInt32LE, 32);
-  export const int8BE = numberEncoding(NumberFormat.Int8BE, 8);
-  export const int8LE = numberEncoding(NumberFormat.Int8LE, 8);
+  export const int8 = numberEncoding(NumberFormat.Int8LE, 8);
   export const int16BE = numberEncoding(NumberFormat.Int16BE, 16);
   export const int16LE = numberEncoding(NumberFormat.Int16LE, 16);
   export const int32BE = numberEncoding(NumberFormat.Int32BE, 32);

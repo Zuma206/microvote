@@ -1,7 +1,7 @@
 namespace Buffers {
   class CharEncoding implements EncodingImpl<string> {
     public readonly zero: string = "\0";
-    private static encoding = uInt8LE;
+    private static encoding = uInt8;
 
     constructor() { }
 
