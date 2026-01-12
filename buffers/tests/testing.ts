@@ -16,8 +16,7 @@ namespace Tests {
 
   type TestValuesOptions<T> = {
     encodings: { [K: string]: Buffers.Encoding<T> };
-    toExpected?: (value: T) => T;
-    values: T[];
+    values: ({ input: T, expected?: T })[];
   }
 
   export function testValues<T>(options: TestValuesOptions<T>) {
@@ -27,11 +26,20 @@ namespace Tests {
       const encoding = options.encodings[encodingName];
       for (let j = 0; j < options.values.length; j++) {
         const value = options.values[j];
-        const buffer = encoding.encode(value);
-        const expected = options.toExpected ? options.toExpected(value) : value;
+        const buffer = encoding.encode(value.input);
         const actual = encoding.decode(buffer);
+        const expected = value.expected !== undefined
+          ? value.expected
+          : value.input;
         assertDeepEqual(encodingName, actual, expected);
       }
     }
+  }
+
+  function pad(str: string, len: number) {
+    while (str.length < len) {
+      str += "\0";
+    }
+    return str;
   }
 }
