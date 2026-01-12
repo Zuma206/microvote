@@ -36,7 +36,7 @@ namespace Tests {
     }
   }
 
-  function pad(str: string, len: number) {
+  export function pad(str: string, len: number) {
     while (str.length < len) {
       str += "\0";
     }
