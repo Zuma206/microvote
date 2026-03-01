@@ -1,8 +1,14 @@
 namespace Buffers {
   class BufferEncoding implements EncodingImpl<Buffer> {
+    private readonly lengthEncoding: EncodingImpl<number>;
     public readonly zero: Buffer = pins.createBuffer(0);
 
-    constructor(private readonly lengthEncoding: EncodingImpl<number> = uInt32LE) { }
+    constructor(lengthEncoding?: EncodingImpl<number>) {
+      if (lengthEncoding)
+        this.lengthEncoding = lengthEncoding;
+      else
+        this.lengthEncoding = uInt32LE;
+    }
 
     encodeAt(buffer: Buffer, offset: number, value: Buffer): number {
       const lengthWritten = this.lengthEncoding.encodeAt(buffer, offset, value.length);

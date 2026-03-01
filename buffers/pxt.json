@@ -11,7 +11,8 @@
     "src/flags.ts",
     "src/numbers.ts",
     "src/strings.ts",
-    "src/struct.ts"
+    "src/struct.ts",
+    "src/buffer.ts"
   ],
   "testFiles": [
     "tests/testing.ts",
