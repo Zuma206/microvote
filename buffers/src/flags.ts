@@ -4,6 +4,8 @@ namespace Buffers {
   }
 
   type FlagsToObject<T extends FlagsSchema> = {
+    // TODO: Consider removing the optionality of this field, as it's
+    // practically always defined except for in the zero case
     [K in keyof T]?: boolean;
   }
 

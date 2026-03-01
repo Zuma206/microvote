@@ -38,13 +38,13 @@ namespace Tests {
           name: "John",
           money: -342.02,
           age: 23,
-          flags: {}
+          flags: { admin: true, banned: false },
         },
         expected: {
           name: pad("John", nameLength),
           money: -342.02,
           age: 23,
-          flags: {},
+          flags: { admin: true, banned: false },
         }
       }
     ],
