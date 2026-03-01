@@ -3,10 +3,22 @@ namespace Tests {
     control.assert(typeof actual == typeof expected,
       `${name} was of type ${typeof actual}, type of ${typeof expected} was expected`);
     if (typeof actual == "object" && actual != null) {
-      const keys = Object.keys(actual).concat(Object.keys(expected));
-      for (let i = 0; i < keys.length; i++) {
-        const key = keys[i] as keyof typeof actual & keyof typeof expected & string;
-        assertDeepEqual(`${name}.${key}`, actual[key], expected[key]);
+      if (Array.isArray(expected)) {
+        control.assert(Array.isArray(actual), `expected ${name} to be array, got plain object`);
+        const expectedArr = expected as any as any[];
+        const actualArr = actual as any as any[];
+        control.assert(expectedArr.length == actualArr.length,
+          `expected ${name} to have length ${expectedArr.length}, got length ${actualArr.length}`);
+        for (let i = 0; i < expectedArr.length; i++) {
+          assertDeepEqual(`${name}[${i}]`, actualArr[i], expectedArr[i]);
+        }
+      }
+      else {
+        const keys = Object.keys(actual).concat(Object.keys(expected));
+        for (let i = 0; i < keys.length; i++) {
+          const key = keys[i] as keyof typeof actual & keyof typeof expected & string;
+          assertDeepEqual(`${name}.${key}`, actual[key], expected[key]);
+        }
       }
     } else {
       control.assert(actual == expected,
