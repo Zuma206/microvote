@@ -26,8 +26,8 @@ namespace Buffers {
 
   class FlagEncoding<T extends FlagsSchema> implements EncodingImpl<FlagsToObject<T>> {
     public readonly zero: FlagsToObject<T> = {};
-    private static readonly encoding = uInt8;
-    private static readonly flagsPerByte = 8;
+    private readonly encoding = uInt8;
+    private readonly flagsPerByte = 8;
     private readonly flags: Flag[];
     private readonly bytes: number;
 
@@ -42,13 +42,13 @@ namespace Buffers {
       let written = 0;
       for (let byte = 0; byte < this.bytes; byte++) {
         let flags = 0;
-        for (let flagInByte = 0, flag = byte * FlagEncoding.flagsPerByte;
+        for (let flagInByte = 0, flag = byte * this.flagsPerByte;
           flag < this.flags.length; flag++, flagInByte++) {
           const mask = Math.pow(2, flagInByte);
           const enabled = value[this.flags[flag].key] == true;
           flags |= enabled ? mask : 0;
         }
-        written += FlagEncoding.encoding.encodeAt(buffer, offset + written, flags);
+        written += this.encoding.encodeAt(buffer, offset + written, flags);
       }
       return written;
     }
@@ -57,8 +57,8 @@ namespace Buffers {
       const value = {} as FlagsToObject<T>;
       let read = 0;
       for (let byte = 0; byte < this.bytes; byte++) {
-        const result = FlagEncoding.encoding.decodeAt(buffer, offset + read);
-        for (let flagInByte = 0, flag = byte * FlagEncoding.flagsPerByte;
+        const result = this.encoding.decodeAt(buffer, offset + read);
+        for (let flagInByte = 0, flag = byte * this.flagsPerByte;
           flag < this.flags.length; flagInByte++, flag++) {
           const mask = Math.pow(2, flag);
           const enabled = (result.value & mask) == mask;
