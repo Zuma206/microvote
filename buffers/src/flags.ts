@@ -44,9 +44,9 @@ namespace Buffers {
         let flags = 0;
         for (let flagInByte = 0, flag = byte * this.flagsPerByte;
           flag < this.flags.length; flag++, flagInByte++) {
-          const mask = Math.pow(2, flagInByte);
+          const mask = 1 << flagInByte;
           const enabled = value[this.flags[flag].key] == true;
-          flags |= enabled ? mask : 0;
+          if (enabled) flags |= mask;
         }
         written += this.encoding.encodeAt(buffer, offset + written, flags);
       }
