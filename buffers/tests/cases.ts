@@ -8,7 +8,7 @@ namespace Tests {
       admin: 0,
       banned: 1,
     }).order(3),
-    friends: Buffers.array(Buffers.uInt32BE, 3).order(4)
+    friends: Buffers.array(Buffers.uInt32BE, 3).order(4),
   });
 
   testValues({
@@ -54,4 +54,11 @@ namespace Tests {
       }
     ],
   });
+
+  const bufferStruct = Buffers.struct({ buffer: Buffers.buffer().order(0) });
+  const string3 = Buffers.string(3);
+  const stringToEncode = string3.encode("abc");
+  const encodedBufferStruct = bufferStruct.encode({ buffer: stringToEncode });
+  const decodedBufferStruct = bufferStruct.decode(encodedBufferStruct);
+  control.assert(decodedBufferStruct.buffer.equals(stringToEncode), "encoded buffer differed from expected content");
 }
