@@ -8,6 +8,7 @@ namespace Tests {
       admin: 0,
       banned: 1,
     }).order(3),
+    friends: Buffers.array(Buffers.uInt32BE, 3).order(4)
   });
 
   testValues({
@@ -21,7 +22,8 @@ namespace Tests {
           flags: {
             admin: true,
             banned: false,
-          }
+          },
+          friends: [4, 2],
         },
         expected: {
           name: pad("James", nameLength),
@@ -30,7 +32,8 @@ namespace Tests {
           flags: {
             admin: true,
             banned: false,
-          }
+          },
+          friends: [4, 2, 0]
         },
       },
       {
@@ -39,12 +42,14 @@ namespace Tests {
           money: -342.02,
           age: 23,
           flags: { admin: true, banned: false },
+          friends: [4672, 3692, 356578],
         },
         expected: {
           name: pad("John", nameLength),
           money: -342.02,
           age: 23,
           flags: { admin: true, banned: false },
+          friends: [4672, 3692, 356578]
         }
       }
     ],
