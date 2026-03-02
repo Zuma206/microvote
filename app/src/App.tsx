@@ -3,6 +3,7 @@ import { MicrobitProvider } from "./lib/context";
 import { Shell } from "./components/Shell";
 import { Init } from "./components/Init";
 import { useState } from "react";
+import { Results } from "./components/Results";
 
 export function App() {
   const [microbit, setMicrobit] = useState(false);
@@ -11,7 +12,7 @@ export function App() {
     <MantineProvider>
       <MicrobitProvider {...{ microbit, setMicrobit }}>
         <Shell>
-          {microbit ? "Done" : <Init />}
+          {microbit ? <Results /> : <Init />}
         </Shell>
       </MicrobitProvider>
     </MantineProvider >
