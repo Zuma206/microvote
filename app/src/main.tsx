@@ -1,4 +1,5 @@
 import { createRoot } from "react-dom/client";
+import "@mantine/core/styles.css";
 
 // Finds the root element and initialised react inside of it.
 const rootElement = document.getElementById("root");
