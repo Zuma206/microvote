@@ -1,0 +1,10 @@
+{
+  "extends": "../tsconfig.pxt.json",
+  "compilerOptions": {
+    "outDir": "built",
+    "rootDir": "."
+  },
+  "exclude": [
+    "pxt_modules/**/*test.ts"
+  ]
+}
