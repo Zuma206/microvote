@@ -1,6 +1,7 @@
 import { TextInput, Card, Flex, InputLabel, Button } from "@mantine/core";
+import { useMicrovote } from "../lib/context";
 import { useState } from "react";
-import { MessageType, useMicrovote } from "../lib/context";
+import { MessageType } from "../lib/reducers";
 
 export function NewVote() {
   const [choices, setChoices] = useState<string[]>([]);

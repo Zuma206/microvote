@@ -1,5 +1,6 @@
 import { Button, Card, Flex, Text } from "@mantine/core";
-import { MessageType, useMicrovote } from "../lib/context";
+import { MessageType } from "../lib/reducers";
+import { useMicrovote } from "../lib/context";
 import { Microbit } from "../lib/microbit";
 
 export function Init() {

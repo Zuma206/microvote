@@ -1,6 +1,6 @@
 import { Center, Flex, SegmentedControl } from "@mantine/core";
-import { MessageType, useMicrovote } from "../lib/context";
-import { ReactNode, useState } from "react";
+import { useMicrovote } from "../lib/context";
+import { MessageType } from "../lib/reducers";
 import { Results } from "./Results";
 import { Devices } from "./Devices";
 import { NewVote } from "./NewVote";
