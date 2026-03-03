@@ -19,7 +19,7 @@ export function Devices() {
     <div>
       <Grid>
         {devices.map(device => (
-          <Grid.Col span={3}>
+          <Grid.Col key={device} span={3}>
             <Card withBorder p="xl">
               <Card.Section><Text size="lg" pb="sm" fw="bold">🕹️ {device}</Text></Card.Section>
               <Card.Section>
