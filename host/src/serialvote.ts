@@ -1,41 +1,21 @@
-class SerialVoteConnection {
+class SerialVoteDevice {
   private static readonly DELIMETER = "\n";
+  private startCallback?: (choices: number) => void;
+
+  onStart(callback: SerialVoteDevice["startCallback"]) {
+    this.startCallback = callback;
+  }
 
   constructor() {
     const onDataReceived = () => this.onMessageReceived();
-    serial.onDataReceived(SerialVoteConnection.DELIMETER, onDataReceived);
+    serial.onDataReceived(SerialVoteDevice.DELIMETER, onDataReceived);
   }
 
   private onMessageReceived() {
-    const line = serial.readUntil(SerialVoteConnection.DELIMETER);
-    const message = JSON.parse(line);
+    const line = serial.readUntil(SerialVoteDevice.DELIMETER);
+    const message = JSON.parse(line) as SerialVote.Message;
     switch (message.type) {
-      case "start": return this.start(message.id, message.options);
-      case "stop": return this.stop(message.id);
+      case "START": if (this.startCallback) this.startCallback(message.choices);
     }
-  }
-
-  private state?: { id: number, options: number };
-
-  public onStart?: (options: number) => void;
-  private start(id: number, options: number) {
-    this.state = { id, options };
-    if (this.onStart) this.onStart(options);
-  }
-
-  public onStop?: () => void;
-  private stop(id: number) {
-    if (!this.state || this.state.id != id) return;
-    this.state = undefined;
-    if (this.onStop) this.onStop();
-  }
-
-  update(votes: number[]) {
-    if (!this.state || this.state.options != votes.length) return;
-    serial.writeLine(JSON.stringify({
-      id: this.state.id,
-      type: "update",
-      votes,
-    }));
   }
 }
