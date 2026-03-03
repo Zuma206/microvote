@@ -8,6 +8,7 @@ export function Init() {
 
   async function onConnectClicked() {
     const microbit = await Microbit.request();
+    await microbit.open();
     dispatch({ type: MessageType.SetMicrobit, microbit });
   }
 
