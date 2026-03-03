@@ -2,5 +2,7 @@ declare namespace SerialVote {
   export type Message =
     { type: "START", choices: number } |
     { type: "RESULTS", results: number[] } |
-    { type: "DEVICES", devices: number[] };
+    { type: "DEVICES", devices: number[] } |
+    { type: "IDENTIFY", device: number } |
+    { type: "REMOVE", device: number };
 }

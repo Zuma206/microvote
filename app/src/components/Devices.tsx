@@ -6,17 +6,25 @@ interface DeviceProps {
 }
 
 function Device(props: DeviceProps) {
-  return <Grid.Col span={3}>
-    <Card withBorder p="xl">
-      <Card.Section><Text size="lg" pb="sm" fw="bold">🕹️ {props.device}</Text></Card.Section>
-      <Card.Section>
-        <Flex gap="xs">
-          <Button>Identify</Button>
-          <Button color="red">Kick</Button>
-        </Flex>
-      </Card.Section>
-    </Card>
-  </Grid.Col>
+  const { serialVote } = useMicrovote();
+
+  return (
+    <Grid.Col span={3}>
+      <Card withBorder p="xl">
+        <Card.Section><Text size="lg" pb="sm" fw="bold">🕹️ {props.device}</Text></Card.Section>
+        <Card.Section>
+          <Flex gap="xs">
+            <Button onClick={() => serialVote?.identify(props.device)}>
+              Identify
+            </Button>
+            <Button onClick={() => serialVote?.remove(props.device)} color="red">
+              Remove
+            </Button>
+          </Flex>
+        </Card.Section>
+      </Card>
+    </Grid.Col>
+  );
 }
 
 export function Devices() {
