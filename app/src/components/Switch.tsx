@@ -1,10 +1,11 @@
-import { Flex, SegmentedControl } from "@mantine/core";
+import { Center, Flex, SegmentedControl } from "@mantine/core";
 import { ReactNode, useState } from "react";
 import { Results } from "./Results";
 import { Devices } from "./Devices";
+import { NewVote } from "./NewVote";
 
 const pages = new Map<string, ReactNode>()
-  .set("New Vote", <p>New Vote</p>)
+  .set("New Vote", <NewVote />)
   .set("Results", <Results />)
   .set("Devices", <Devices />);
 
@@ -20,7 +21,9 @@ export function Switch() {
         data={pagesKeys}
         value={page}
       />
-      {pages.get(page)}
+      <Center>
+        {pages.get(page)}
+      </Center>
     </Flex>
   );
 }
