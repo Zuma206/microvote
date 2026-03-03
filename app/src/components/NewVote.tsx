@@ -18,6 +18,7 @@ export function NewVote() {
         <TextInput
           onChange={(e) => setTitle(e.currentTarget.value)}
           placeholder="Vote Question"
+          autoComplete="off"
           value={title}
           id="question"
           size="lg"
