@@ -2,6 +2,7 @@ import { Card, Center, Flex, SimpleGrid, Slider, Text } from "@mantine/core";
 import { useMicrovote } from "../lib/context";
 
 interface ResultProps {
+  result: number;
   index: number;
   name: string;
 }
@@ -11,7 +12,7 @@ function Result(props: ResultProps) {
   return (
     <>
       <Text>{char}: {props.name}</Text>
-      <Slider value={0} />
+      <Slider value={props.result} />
       <div>{0}%</div>
     </>
   );
@@ -32,7 +33,12 @@ export function Results() {
               alignItems: "center",
             }}>
               {vote.choices.map((choice, index) => (
-                <Result key={index} name={choice} index={index} />
+                <Result
+                  result={vote.results[index] ?? 0}
+                  index={index}
+                  name={choice}
+                  key={index}
+                />
               ))}
             </SimpleGrid>
           </Flex>
