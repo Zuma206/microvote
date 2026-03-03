@@ -1,11 +1,13 @@
 import { Button, Card, Flex, Text } from "@mantine/core";
-import { useMicrobit } from "../lib/context";
+import { MessageType, useMicrovote } from "../lib/context";
+import { Microbit } from "../lib/microbit";
 
 export function Init() {
-  const { setMicrobit } = useMicrobit();
+  const { dispatch } = useMicrovote();
 
-  function onConnectClicked() {
-    setMicrobit(true);
+  async function onConnectClicked() {
+    const microbit = await Microbit.request();
+    dispatch({ type: MessageType.SetMicrobit, microbit });
   }
 
   return (
