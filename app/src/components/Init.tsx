@@ -1,18 +1,8 @@
 import { Button, Card, Flex, Text } from "@mantine/core";
-import { SerialVoteDevice } from "../lib/serialvote";
-import { MessageType } from "../lib/reducers";
-import { useMicrovote } from "../lib/context";
-import { Microbit } from "../lib/microbit";
+import { useConnect } from "../lib/connect";
 
 export function Init() {
-  const { dispatch } = useMicrovote();
-
-  async function onConnectClicked() {
-    const microbit = await Microbit.request();
-    await microbit.open();
-    const serialVote = new SerialVoteDevice(microbit);
-    dispatch({ type: MessageType.SetMicrobit, serialVote });
-  }
+  const connect = useConnect();
 
   return (
     <Card maw="30em" withBorder p="lg">
@@ -22,7 +12,7 @@ export function Init() {
           To get started, plug your host Micro:Bit, press "connect",
           and select your Micro:Bit from the list of devices.
         </Text>
-        <Button onClick={onConnectClicked}>Connect</Button>
+        <Button onClick={connect}>Connect</Button>
       </Flex>
     </Card>
   );
