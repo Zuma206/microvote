@@ -30,6 +30,7 @@ function setMicrobit(state: MicrovoteState, msg: SetMicrobitMessage): MicrovoteS
 }
 
 function startVote(state: MicrovoteState, msg: StartVoteMessage): MicrovoteState {
+  if (state.microbit) state.microbit.start(msg.choices.length);
   return {
     ...state,
     vote: {

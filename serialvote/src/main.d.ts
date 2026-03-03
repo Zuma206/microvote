@@ -1,3 +1,3 @@
 declare namespace SerialVote {
-  export type Message = never;
+  export type Message = { type: "START", choices: number };
 }
