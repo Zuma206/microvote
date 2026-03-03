@@ -1,9 +1,15 @@
 import { TextInput, Card, Flex, InputLabel, Button } from "@mantine/core";
 import { useState } from "react";
+import { MessageType, useMicrovote } from "../lib/context";
 
 export function NewVote() {
   const [choices, setChoices] = useState<string[]>([]);
   const [title, setTitle] = useState("");
+  const { dispatch } = useMicrovote();
+
+  function startVote() {
+    dispatch({ type: MessageType.StartVote, title, choices });
+  }
 
   return (
     <Card withBorder flex={1} maw="40em">
@@ -39,7 +45,7 @@ export function NewVote() {
             />
           ]}
         </Flex>
-        <Button color="green">Start Vote</Button>
+        <Button onClick={startVote} color="green">Start Vote</Button>
       </Flex>
     </Card>
   );

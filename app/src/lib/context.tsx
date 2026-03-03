@@ -15,15 +15,26 @@ const initialState: MicrovoteState = { devices: [] };
 
 export enum MessageType {
   SetMicrobit,
+  StartVote,
 }
 
 type Message =
-  { type: MessageType.SetMicrobit, microbit: Microbit };
+  { type: MessageType.SetMicrobit, microbit: Microbit } |
+  { type: MessageType.StartVote, title: string, choices: string[] };
 
-function reducer(state: MicrovoteState, message: Message) {
+function reducer(state: MicrovoteState, message: Message): MicrovoteState {
   switch (message.type) {
     case MessageType.SetMicrobit:
       return { ...state, microbit: message.microbit };
+    case MessageType.StartVote:
+      return {
+        ...state,
+        vote: {
+          choices: message.choices,
+          title: message.title,
+          results: [],
+        }
+      };
   }
 }
 
