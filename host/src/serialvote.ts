@@ -33,4 +33,17 @@ class SerialVoteDevice {
         break;
     }
   }
+
+  private dispatch(message: SerialVote.Message) {
+    const line = JSON.stringify(message);
+    serial.writeLine(line);
+  }
+
+  setResults(results: number[]) {
+    this.dispatch({ type: "RESULTS", results });
+  }
+
+  setDevices(devices: number[]) {
+    this.dispatch({ type: "DEVICES", devices });
+  }
 }
