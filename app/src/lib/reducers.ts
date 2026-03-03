@@ -42,5 +42,5 @@ function startVote(state: MicrovoteState, msg: StartVoteMessage): MicrovoteState
 }
 
 function changePage(state: MicrovoteState, msg: ChangePageMessage): MicrovoteState {
-  return { ...state, page: message.page }
+  return { ...state, page: msg.page }
 }
