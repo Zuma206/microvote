@@ -1,0 +1,16 @@
+{
+  "name": "@microvote/serialvote",
+  "dependencies": {
+    "core": "*",
+    "radio": "*",
+    "microphone": "*"
+  },
+  "files": [
+    "src/main.d.ts"
+  ],
+  "public": false,
+  "supportedTargets": [
+    "microbit"
+  ],
+  "preferredEditor": "blocksprj"
+}
