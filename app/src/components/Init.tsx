@@ -1,4 +1,5 @@
 import { Button, Card, Flex, Text } from "@mantine/core";
+import { SerialVoteDevice } from "../lib/serialvote";
 import { MessageType } from "../lib/reducers";
 import { useMicrovote } from "../lib/context";
 import { Microbit } from "../lib/microbit";
@@ -9,7 +10,8 @@ export function Init() {
   async function onConnectClicked() {
     const microbit = await Microbit.request();
     await microbit.open();
-    dispatch({ type: MessageType.SetMicrobit, microbit });
+    const serialVote = new SerialVoteDevice(microbit);
+    dispatch({ type: MessageType.SetMicrobit, serialVote });
   }
 
   return (

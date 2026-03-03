@@ -13,10 +13,10 @@ export const pages = {
 };
 
 export function Switch() {
-  const { microbit, page, dispatch } = useMicrovote();
+  const { serialVote, page, dispatch } = useMicrovote();
 
   return (
-    microbit === undefined
+    serialVote === undefined
       ? <Init />
       : (
         <Flex flex={1} align="stretch" direction="column" gap="lg">

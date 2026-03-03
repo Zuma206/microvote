@@ -1,15 +1,14 @@
 import { SerialVoteDevice } from "./serialvote";
 import { pages } from "../components/Switch";
 import { MicrovoteState } from "./context";
-import { Microbit } from "./microbit";
 
 export enum MessageType {
-  SetMicrobit,
+  SetSerialVote,
   StartVote,
   ChangePage,
 }
 
-type SetMicrobitMessage = { type: MessageType.SetMicrobit, microbit: Microbit };
+type SetMicrobitMessage = { type: MessageType.SetSerialVote, serialVote: SerialVoteDevice };
 type StartVoteMessage = { type: MessageType.StartVote, title: string, choices: string[] };
 type ChangePageMessage = { type: MessageType.ChangePage, page: keyof typeof pages };
 type Message =
@@ -19,18 +18,18 @@ type Message =
 
 export function reducer(state: MicrovoteState, message: Message): MicrovoteState {
   switch (message.type) {
-    case MessageType.SetMicrobit: return setMicrobit(state, message);
+    case MessageType.SetSerialVote: return setMicrobit(state, message);
     case MessageType.StartVote: return startVote(state, message);
     case MessageType.ChangePage: return changePage(state, message);
   }
 }
 
 function setMicrobit(state: MicrovoteState, msg: SetMicrobitMessage): MicrovoteState {
-  return { ...state, microbit: new SerialVoteDevice(msg.microbit) };
+  return { ...state, serialVote: msg.serialVote };
 }
 
 function startVote(state: MicrovoteState, msg: StartVoteMessage): MicrovoteState {
-  if (state.microbit) state.microbit.start(msg.choices.length);
+  if (state.serialVote) state.serialVote.start(msg.choices.length);
   return {
     ...state,
     vote: {

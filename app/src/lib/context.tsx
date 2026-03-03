@@ -5,7 +5,7 @@ import { reducer } from "./reducers";
 
 export class MicrovoteState {
   page: keyof typeof pages = "New Vote";
-  microbit?: SerialVoteDevice;
+  serialVote?: SerialVoteDevice;
   devices: number[] = [];
   vote?: {
     title: string;
