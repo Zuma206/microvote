@@ -1,34 +1,35 @@
 import { Center, Flex, SegmentedControl } from "@mantine/core";
-import { useMicrovote } from "../lib/context";
+import { MessageType, useMicrovote } from "../lib/context";
 import { ReactNode, useState } from "react";
 import { Results } from "./Results";
 import { Devices } from "./Devices";
 import { NewVote } from "./NewVote";
 import { Init } from "./Init";
 
-const pages = new Map<string, ReactNode>()
-  .set("New Vote", <NewVote />)
-  .set("Results", <Results />)
-  .set("Devices", <Devices />);
-
-const pagesKeys = Array.from(pages.keys());
+export const pages = {
+  "New Vote": <NewVote />,
+  "Results": <Results />,
+  "Devices": <Devices />,
+};
 
 export function Switch() {
-  const [page, setPage] = useState(pagesKeys[0]);
-  const microvote = useMicrovote();
+  const { microbit, page, dispatch } = useMicrovote();
 
   return (
-    microvote.microbit === undefined
+    microbit === undefined
       ? <Init />
       : (
         <Flex flex={1} align="stretch" direction="column" gap="lg">
           <SegmentedControl
-            onChange={(page) => setPage(page)}
-            data={pagesKeys}
+            onChange={(page) => dispatch({
+              type: MessageType.ChangePage,
+              page: page as keyof typeof pages
+            })}
+            data={Object.keys(pages)}
             value={page}
           />
           <Center>
-            {pages.get(page)}
+            {pages[page]}
           </Center>
         </Flex>
       )

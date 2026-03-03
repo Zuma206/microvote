@@ -1,7 +1,9 @@
 import { ActionDispatch, createContext, PropsWithChildren, use, useReducer } from "react";
+import { pages } from "../components/Switch";
 import { Microbit } from "./microbit";
 
 interface MicrovoteState {
+  page: keyof typeof pages,
   microbit?: Microbit;
   vote?: {
     title: string;
@@ -11,16 +13,18 @@ interface MicrovoteState {
   devices: number[];
 }
 
-const initialState: MicrovoteState = { devices: [] };
+const initialState: MicrovoteState = { devices: [], page: "New Vote" };
 
 export enum MessageType {
   SetMicrobit,
   StartVote,
+  ChangePage,
 }
 
 type Message =
   { type: MessageType.SetMicrobit, microbit: Microbit } |
-  { type: MessageType.StartVote, title: string, choices: string[] };
+  { type: MessageType.StartVote, title: string, choices: string[] } |
+  { type: MessageType.ChangePage, page: keyof typeof pages };
 
 function reducer(state: MicrovoteState, message: Message): MicrovoteState {
   switch (message.type) {
@@ -33,8 +37,11 @@ function reducer(state: MicrovoteState, message: Message): MicrovoteState {
           choices: message.choices,
           title: message.title,
           results: [],
-        }
+        },
+        page: "Results",
       };
+    case MessageType.ChangePage:
+      return { ...state, page: message.page };
   }
 }
 
