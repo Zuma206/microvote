@@ -4,8 +4,8 @@ namespace Radiostack {
     sendBuffer(buffer: Buffer): void;
   }
 
-  export const radio: Layer = {
-    onReceivedBuffer: globalThis.radio.onReceivedBuffer,
-    sendBuffer: globalThis.radio.sendBuffer,
+  export const ubitRadio: Layer = {
+    onReceivedBuffer: radio.onReceivedBuffer,
+    sendBuffer: radio.sendBuffer,
   };
 }
