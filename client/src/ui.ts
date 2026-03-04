@@ -47,9 +47,9 @@ class UserInterface {
   }
 
   private select() {
-    this.choices = 0;
     if (this.selectCallback) this.selectCallback(this.selected);
     this.choices = undefined;
+    this.selected = 0;
     this.render();
   }
 }
