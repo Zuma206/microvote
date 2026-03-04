@@ -7,7 +7,8 @@
     "@microvote/buffers": "file:../buffers"
   },
   "files": [
-    "src/application.ts"
+    "src/application.ts",
+    "src/layer.ts"
   ],
   "public": false,
   "supportedTargets": [
