@@ -17,11 +17,13 @@ export class SerialVoteDevice {
   }
 
   private async loop() {
-    const line = await this.microbit.readLine();
-    const message = JSON.parse(line) as SerialVote.Message;
-    switch (message.type) {
-      case "RESULTS": return this.resultsCallback?.(message.results);
-      case "DEVICES": return this.devicesCallback?.(message.devices);
+    while (true) {
+      const line = await this.microbit.readLine();
+      const message = JSON.parse(line) as SerialVote.Message;
+      switch (message.type) {
+        case "RESULTS": return this.resultsCallback?.(message.results);
+        case "DEVICES": return this.devicesCallback?.(message.devices);
+      }
     }
   }
 
