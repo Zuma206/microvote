@@ -37,25 +37,31 @@ namespace Radiostack {
     }
 
     start(n: number) {
+      const voteId = this.sequenceId++;
       const packet = ApplicationPacket.encode({
-        voteId: this.sequenceId++,
         flags: { start: true },
+        voteId,
         n,
       });
+      this.setStart(voteId, n);
       this.radio.sendBuffer(packet);
     }
 
     private onReceivedBuffer(buffer: Buffer) {
       const packet = ApplicationPacket.decode(buffer);
       if (packet.flags.start) {
-        const results: number[] = [];
-        for (let i = 0; i < packet.n; i++) results.push(0);
-        this.vote = { id: packet.voteId, results };
-        if (this.startCallback) this.startCallback(packet.n);
+        this.setStart(packet.voteId, packet.n);
       } else if (packet.flags.cast && this.vote && this.vote.id == packet.voteId) {
         this.vote.results[packet.n]++;
         if (this.resultsCallback) this.resultsCallback(this.vote.results);
       }
+    }
+
+    private setStart(id: number, n: number) {
+      const results: number[] = [];
+      for (let i = 0; i < n; i++) results.push(0);
+      this.vote = { id, results };
+      if (this.startCallback) this.startCallback(n);
     }
   }
 }
