@@ -1,17 +1,17 @@
 {
-    "name": "@microvote/radiostack",
-    "dependencies": {
-        "core": "*",
-        "radio": "*",
-        "microphone": "*",
-        "@microvote/buffers": "file:../buffers"
-    },
-    "files": [
-        "src/main.ts"
-    ],
-    "public": false,
-    "supportedTargets": [
-        "microbit"
-    ],
-    "preferredEditor": "blocksprj"
+  "name": "@microvote/radiostack",
+  "dependencies": {
+    "core": "*",
+    "radio": "*",
+    "microphone": "*",
+    "@microvote/buffers": "file:../buffers"
+  },
+  "files": [
+    "src/application.ts"
+  ],
+  "public": false,
+  "supportedTargets": [
+    "microbit"
+  ],
+  "preferredEditor": "blocksprj"
 }
