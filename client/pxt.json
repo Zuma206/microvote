@@ -1,0 +1,17 @@
+{
+  "name": "@microvote/client",
+  "dependencies": {
+    "core": "*",
+    "radio": "*",
+    "microphone": "*",
+    "@microvote/radiostack": "file:../radiostack"
+  },
+  "files": [
+    "src/main.ts"
+  ],
+  "public": false,
+  "supportedTargets": [
+    "microbit"
+  ],
+  "preferredEditor": "blocksprj"
+}
