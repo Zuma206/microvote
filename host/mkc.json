@@ -1,5 +1,6 @@
 {
   "links": {
-    "@microvote/radiostack": "../radiostack"
+    "@microvote/radiostack": "../radiostack",
+    "@microvote/serialvote": "../serialvote"
   }
 }
