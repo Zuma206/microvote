@@ -9,7 +9,8 @@
   },
   "files": [
     "src/main.ts",
-    "src/serialvote.ts"
+    "src/serialvote.ts",
+    "src/ui.ts"
   ],
   "public": false,
   "supportedTargets": [
