@@ -16,6 +16,7 @@ class UserInterface {
   start(choices: number) {
     this.selected = 0;
     this.choices = choices;
+    this.render();
   }
 
   private render() {
