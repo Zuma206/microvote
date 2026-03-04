@@ -14,6 +14,10 @@ namespace Radiostack {
       id: number,
     };
 
+    constructor(private readonly radio: Layer) {
+      this.radio.onReceivedBuffer((buffer) => this.onReceivedBuffer(buffer));
+    }
+
     onResults(callback: ApplicationManager["resultsCallback"]) {
       this.resultsCallback = callback;
     }
@@ -29,7 +33,7 @@ namespace Radiostack {
         flags: { cast: true },
         n,
       });
-      radio.sendBuffer(packet);
+      this.radio.sendBuffer(packet);
     }
 
     start(n: number) {
@@ -38,10 +42,10 @@ namespace Radiostack {
         flags: { start: true },
         n,
       });
-      radio.sendBuffer(packet);
+      this.radio.sendBuffer(packet);
     }
 
-    handle(buffer: Buffer) {
+    private onReceivedBuffer(buffer: Buffer) {
       const packet = ApplicationPacket.decode(buffer);
       if (packet.flags.start) {
         const results: number[] = [];
