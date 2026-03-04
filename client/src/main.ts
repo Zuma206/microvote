@@ -1,4 +1,4 @@
-const appManager = new Radiostack.ApplicationManager(radio);
+const appManager = new Radiostack.ApplicationManager(Radiostack.radio);
 const ui = new UserInterface();
 
 appManager.onStart((choices) => ui.start(choices));

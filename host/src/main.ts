@@ -1,9 +1,6 @@
 serial.setRxBufferSize(128);
 
-const appManager = new Radiostack.ApplicationManager({
-  onReceivedBuffer: radio.onReceivedBuffer,
-  sendBuffer: radio.sendBuffer,
-});
+const appManager = new Radiostack.ApplicationManager(Radiostack.radio);
 const serialVote = new SerialVoteDevice();
 
 appManager.onResults((results) => serialVote.setResults(results));
