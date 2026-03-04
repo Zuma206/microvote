@@ -28,7 +28,7 @@ class UserInterface {
     }
   }
 
-  private left() {
+  private right() {
     if (this.choices) {
       this.selected++;
       if (this.selected >= this.choices)
@@ -37,7 +37,7 @@ class UserInterface {
     this.render();
   }
 
-  private right() {
+  private left() {
     if (this.choices) {
       this.selected--;
       if (this.selected < 0)
