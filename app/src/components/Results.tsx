@@ -13,7 +13,7 @@ function Result(props: ResultProps) {
     <>
       <Text>{char}: {props.name}</Text>
       <Slider value={props.result} />
-      <div>{0}%</div>
+      <div>{props.result}%</div>
     </>
   );
 }
@@ -40,6 +40,7 @@ export function Results() {
             />
           ))}
         </SimpleGrid>
+        <Text>Total Votes: {totalVotes}</Text>
       </Flex>
     </Card>
   );
