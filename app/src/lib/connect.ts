@@ -11,6 +11,6 @@ export function useConnect() {
     const serialVote = new SerialVoteDevice(microbit);
     serialVote.onResults((results) => dispatch({ type: MessageType.SetResults, results }));
     serialVote.onDevices((devices) => dispatch({ type: MessageType.SetDevices, devices }));
-    serialVote
+    dispatch({ type: MessageType.SetSerialVote, serialVote });
   }
 }

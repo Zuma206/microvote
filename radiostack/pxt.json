@@ -3,10 +3,12 @@
   "dependencies": {
     "core": "*",
     "radio": "*",
-    "microphone": "*"
+    "microphone": "*",
+    "@microvote/buffers": "file:../buffers"
   },
   "files": [
-    "src/main.ts"
+    "src/application.ts",
+    "src/layer.ts"
   ],
   "public": false,
   "supportedTargets": [
