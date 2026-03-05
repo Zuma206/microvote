@@ -2,18 +2,22 @@ import { Card, Flex, SimpleGrid, Slider, Text } from "@mantine/core";
 import { useMicrovote } from "../lib/context";
 
 interface ResultProps {
-  result: number;
+  totalVotes: number;
+  votes: number;
   index: number;
   name: string;
 }
 
 function Result(props: ResultProps) {
   const char = String.fromCharCode("A".charCodeAt(0) + props.index);
+  const result = props.votes / props.totalVotes * 100;
+  const resultNumber = isNaN(result) ? 0 : result;
+
   return (
     <>
       <Text>{char}: {props.name}</Text>
-      <Slider value={props.result} />
-      <div>{props.result}%</div>
+      <Slider value={resultNumber} />
+      <div>{resultNumber}%</div>
     </>
   );
 }
@@ -33,7 +37,8 @@ export function Results() {
         }}>
           {vote.choices.map((choice, index) => (
             <Result
-              result={(vote.results[index] ?? 0) / totalVotes * 100}
+              totalVotes={totalVotes}
+              votes={vote.results[index]}
               index={index}
               name={choice}
               key={index}
