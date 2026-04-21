@@ -5,11 +5,6 @@ namespace Radiostack {
     n: Buffers.uInt8.order(2),
   });
 
-  interface ApplicationParentLayer {
-    onReceivedBuffer(cb: (buffer: Buffer) => void): void;
-    sendBuffer(buffer: Buffer): void;
-  }
-
   export class ApplicationManager {
     private resultsCallback?: (results: number[]) => void;
     private startCallback?: (choices: number) => void;
@@ -19,7 +14,7 @@ namespace Radiostack {
       id: number,
     };
 
-    constructor(private readonly parent: ApplicationParentLayer) {
+    constructor(private readonly parent: Layer) {
       this.parent.onReceivedBuffer((buffer) => this.onReceivedBuffer(buffer));
     }
 
