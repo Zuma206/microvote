@@ -2,7 +2,7 @@ const SERIAL_BUFFER_SIZE = 128;
 serial.setRxBufferSize(SERIAL_BUFFER_SIZE);
 serial.setTxBufferSize(SERIAL_BUFFER_SIZE);
 
-const appManager = new Radiostack.ApplicationManager(Radiostack.ubitRadio);
+const appManager = new Radiostack.ApplicationManager(Radiostack.uBitRadio);
 const serialVote = new SerialVoteDevice();
 
 appManager.onResults((results) => {

@@ -1,9 +1,14 @@
 namespace Radiostack {
-  export const ApplicationPacket = Buffers.struct({
+  const ApplicationPacket = Buffers.struct({
     voteId: Buffers.uInt16LE.order(0),
     flags: Buffers.flags({ start: 0, cast: 1 }).order(1),
     n: Buffers.uInt8.order(2),
   });
+
+  interface ApplicationParentLayer {
+    onReceivedBuffer(cb: (buffer: Buffer) => void): void;
+    sendBuffer(buffer: Buffer): void;
+  }
 
   export class ApplicationManager {
     private resultsCallback?: (results: number[]) => void;
@@ -14,8 +19,8 @@ namespace Radiostack {
       id: number,
     };
 
-    constructor(private readonly radio: Layer) {
-      this.radio.onReceivedBuffer((buffer) => this.onReceivedBuffer(buffer));
+    constructor(private readonly parent: ApplicationParentLayer) {
+      this.parent.onReceivedBuffer((buffer) => this.onReceivedBuffer(buffer));
     }
 
     onResults(callback: ApplicationManager["resultsCallback"]) {
@@ -33,7 +38,7 @@ namespace Radiostack {
         flags: { cast: true },
         n,
       });
-      this.radio.sendBuffer(packet);
+      this.parent.sendBuffer(packet);
     }
 
     start(n: number) {
@@ -44,7 +49,7 @@ namespace Radiostack {
         n,
       });
       this.setStart(voteId, n);
-      this.radio.sendBuffer(packet);
+      this.parent.sendBuffer(packet);
     }
 
     private onReceivedBuffer(buffer: Buffer) {
