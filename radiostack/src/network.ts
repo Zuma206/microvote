@@ -1,36 +1,31 @@
 namespace Radiostack {
   const NetworkPacket = Buffers.struct({
-    destination: Buffers.uInt32LE.order(0),
-    body: Buffers.buffer(Buffers.uInt8).order(1),
+    dest: Buffers.uInt32LE.order(0),
+    msg: Buffers.buffer(Buffers.uInt8).order(1),
   });
 
-  interface NetworkParentLayer {
-    onReceivedBuffer(cb: (buffer: Buffer) => void): void;
-    sendBuffer(buffer: Buffer): void;
-  }
-
-  export class NetworkManager {
+  export class NetworkManager implements Layer {
     private readonly serialNumber = control.deviceSerialNumber();
-    private receivedBufferCallback?: (buffer: Buffer) => void;
+    private receivedBufferCallback?: (msg: Buffer) => void;
 
     onReceivedBuffer(cb: NetworkManager["receivedBufferCallback"]) {
       this.receivedBufferCallback = cb;
     }
 
-    constructor(private readonly parent: NetworkParentLayer) {
+    constructor(private readonly dest: number, private readonly parent: Layer) {
       this.parent.onReceivedBuffer((buffer) => this.handleReceivedBuffer(buffer));
     }
 
-    sendBuffer(destination: number, buffer: Buffer) {
-      const packet = NetworkPacket.encode({ destination, body: buffer });
+    sendBuffer(msg: Buffer): void {
+      const packet = NetworkPacket.encode({ dest: this.dest, msg });
       this.parent.sendBuffer(packet);
     }
 
     private handleReceivedBuffer(buffer: Buffer) {
       const packet = NetworkPacket.decode(buffer);
-      if (packet.destination != this.serialNumber) return;
+      if (packet.dest != this.serialNumber) return;
       if (this.receivedBufferCallback)
-        this.receivedBufferCallback(packet.body);
+        this.receivedBufferCallback(packet.msg);
     }
   }
 }
