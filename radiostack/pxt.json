@@ -8,7 +8,7 @@
   },
   "files": [
     "src/application.ts",
-    "src/layer.ts"
+    "src/radio.ts"
   ],
   "public": false,
   "supportedTargets": [
