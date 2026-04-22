@@ -8,4 +8,6 @@ namespace Radiostack {
     onReceivedBuffer: radio.onReceivedBuffer,
     sendBuffer: radio.sendBuffer,
   };
+
+  export const RADIO_MAX_BUFFER_SIZE = 19;
 }
