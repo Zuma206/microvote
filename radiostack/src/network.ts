@@ -7,7 +7,12 @@ namespace Radiostack {
   const ME = control.deviceSerialNumber();
 
   export class NetworkManager {
+    private receivedBufferCallback?: (address: number, buffer: Buffer) => void;
     private readonly addresses: { [key: number]: NetworkLayer } = {};
+
+    onReceivedBuffer(cb: NetworkManager["receivedBufferCallback"]) {
+      this.receivedBufferCallback = cb;
+    }
 
     constructor(private readonly parent: Layer) {
       this.parent.onReceivedBuffer((buffer) => this.handleReceivedBuffer(buffer));
@@ -17,8 +22,11 @@ namespace Radiostack {
       const packet = NetworkPacket.decode(buffer);
       if (packet.dest != ME) return;
       const src = radio.receivedSerial();
-      if (!(src in this.addresses)) return;
-      this.addresses[src].handleBuffer(packet.msg);
+      if (!(src in this.addresses)) {
+        if (this.receivedBufferCallback !== undefined)
+          this.receivedBufferCallback(src, buffer);
+      } else
+        this.addresses[src].handleBuffer(packet.msg);
     }
 
     getAddress(address: number) {
