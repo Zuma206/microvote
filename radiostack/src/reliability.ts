@@ -7,5 +7,6 @@ namespace Radiostack {
     chunk: Buffers.buffer(Buffers.uInt8).order(3),
   });
 
-  export const ACK_TIMEOUT = 150
+  export const ACK_TIMEOUT = 150,
+    RELIABILITY_RETRIES = 5;
 }

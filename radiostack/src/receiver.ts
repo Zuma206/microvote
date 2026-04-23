@@ -8,7 +8,7 @@ namespace Radiostack {
     private initialSequence = 0;
     private finished = false;
     private synced = false;
-    private postAcks = 0;
+    private delays = 0;
 
     constructor(private readonly options: {
       onReceivedBuffer: (buffer: Buffer) => void;
@@ -68,9 +68,10 @@ namespace Radiostack {
     }
 
     private delayDeletion() {
-      if (!this.deletionInterval) return;
+      if (!this.deletionInterval || this.delays >= RELIABILITY_RETRIES) return;
       control.clearInterval(this.deletionInterval, control.IntervalMode.Timeout);
-      if (++this.postAcks < 3) this.scheduleDeletion();
+      this.scheduleDeletion();
+      this.delays++;
     }
 
     private acknowlege() {
