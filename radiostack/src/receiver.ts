@@ -18,7 +18,7 @@ namespace Radiostack {
     }) { }
 
     handlePacket(packet: ReliabilityPacket) {
-      if (this.finished) return this.acknowlege();
+      if (this.finished) return this.acknowledge();
       if (packet.flags.syn) return this.handleSyn(packet);
       this.handleData(packet);
     }
@@ -26,7 +26,7 @@ namespace Radiostack {
     private handleSyn(packet: ReliabilityPacket) {
       if (this.synced) {
         if (this.initialSequence === packet.sequence)
-          return this.acknowlege();
+          return this.acknowledge();
         else
           return;
       }
@@ -34,18 +34,18 @@ namespace Radiostack {
       this.buffer = packet.chunk;
       this.synced = true;
       this.finCheck(packet);
-      this.acknowlege();
+      this.acknowledge();
     }
 
     private handleData(packet: ReliabilityPacket) {
       const expectedSequence = this.getExpectedSequence();
       if (expectedSequence > packet.sequence)
-        return this.acknowlege();
+        return this.acknowledge();
       if (expectedSequence < packet.sequence)
         return;
       this.buffer = this.buffer.concat(packet.chunk);
       this.finCheck(packet);
-      this.acknowlege();
+      this.acknowledge();
     }
 
     private getExpectedSequence() {
@@ -74,7 +74,7 @@ namespace Radiostack {
       this.delays++;
     }
 
-    private acknowlege() {
+    private acknowledge() {
       this.delayDeletion();
       const packet = ReliabilityPacket.encode({
         flags: { ack: true },
