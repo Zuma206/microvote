@@ -49,9 +49,13 @@ namespace Radiostack {
 
     constructor(private readonly dest: number, private readonly parent: Layer) { }
 
-    sendBuffer(msg: Buffer): void {
-      const packet = NetworkPacket.encode({ dest: this.dest, msg });
-      this.parent.sendBuffer(packet);
+    sendBuffer(options: SendBufferOptions): void {
+      const packet = NetworkPacket.encode({ dest: this.dest, msg: options.msg });
+      this.parent.sendBuffer({
+        onSuccess: options.onSuccess,
+        onFailure: options.onFailure,
+        msg: packet,
+      });
     }
 
     handleBuffer(buffer: Buffer) {

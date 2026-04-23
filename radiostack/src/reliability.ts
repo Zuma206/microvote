@@ -13,47 +13,47 @@ namespace Radiostack {
   export class ReliabilityLayer implements Layer {
     private receivedMessages: { [key: number]: true } = {};
     private receivedBufferCallback?: (msg: Buffer) => void;
-    private readonly queue: Buffer[] = [];
+    private readonly queue: SendBufferOptions[] = [];
+    private sendOptions?: SendBufferOptions;
     private retrySendInterval?: number;
-    private sending = false;
     private id = 0;
 
     constructor(private readonly parent: Layer) {
       parent.onReceivedBuffer((buffer) => this.handleBuffer(buffer));
     }
 
-    sendBuffer(msg: Buffer): void {
-      if (this.sending === true)
-        return this.queue.push(msg);
-      this.sendNew(msg);
+    sendBuffer(options: SendBufferOptions): void {
+      if (this.sendOptions !== undefined)
+        return this.queue.push(options);
+      this.sendNew(options);
     }
 
     onReceivedBuffer(cb: ReliabilityLayer["receivedBufferCallback"]): void {
       this.receivedBufferCallback = cb;
     }
 
-    private sendNew(msg: Buffer) {
-      this.sending = true;
+    private sendNew(options: SendBufferOptions) {
+      this.sendOptions = options;
       // increase id, wrapping around at the 16-bit integer limit,
       // as id is encoded as 16-bit
       this.id = (this.id + 1) & 0xFFFF;
-      this.send(msg, this.id, 0);
+      this.send(options, this.id, 0);
     }
 
-    private send(msg: Buffer, id: number, tries: number) {
+    private send(options: SendBufferOptions, id: number, tries: number) {
       if (tries >= RELIABILITY_MAX_TRIES)
-        return this.doneSending();
+        return this.doneSending(false);
       this.retrySendInterval = control.setInterval(
-        () => this.send(msg, id, tries + 1),
+        () => this.send(options, id, tries + 1),
         RELIABILITY_RETRY_AFTER,
         control.IntervalMode.Timeout,
       );
       const packet = ReliabilityPacket.encode({
+        msg: options.msg,
         flags: {},
-        msg,
         id,
       });
-      this.parent.sendBuffer(packet);
+      this.parent.sendBuffer({ msg: packet });
     }
 
     private handleBuffer(buffer: Buffer) {
@@ -67,16 +67,25 @@ namespace Radiostack {
       if (id !== this.id) return;
       if (this.retrySendInterval !== undefined)
         control.clearInterval(this.retrySendInterval, control.IntervalMode.Timeout);
-      this.doneSending();
+      this.doneSending(true);
     }
 
-    private doneSending() {
+    private doneSending(success: boolean) {
       this.retrySendInterval = undefined;
-      this.sending = false;
+      this.sendOptions = undefined;
+      this.doneCallback(success);
       if (this.queue.length <= 0) return;
       const msg = this.queue[0];
       this.queue.splice(0, 1);
       this.sendNew(msg);
+    }
+
+    private doneCallback(success: boolean) {
+      if (!this.sendOptions) return;
+      if (success == true && this.sendOptions.onSuccess !== undefined)
+        this.sendOptions.onSuccess();
+      else if (success == false && this.sendOptions.onFailure !== undefined)
+        this.sendOptions.onFailure();
     }
 
     private handleMessage(id: number, msg: Buffer) {
@@ -100,7 +109,7 @@ namespace Radiostack {
         msg: BUFFER_NIL,
         id,
       });
-      this.parent.sendBuffer(packet);
+      this.parent.sendBuffer({ msg: packet });
     }
   }
 }
