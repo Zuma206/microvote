@@ -16,7 +16,7 @@ class SerialVoteDevice {
     this.removeCallback = callback;
   }
 
-  constructor(private readonly getDevices?: () => number[]) {
+  constructor(private readonly participants: number[]) {
     const onDataReceived = () => this.onMessageReceived();
     serial.onDataReceived(SerialVoteDevice.DELIMETER, onDataReceived);
   }
@@ -32,13 +32,8 @@ class SerialVoteDevice {
       case "REMOVE":
         return this.removeCallback(message.device);
       case "DEVICES":
-        return this.devices();
+        return this.updateDevices();
     }
-  }
-
-  private devices() {
-    if (this.getDevices !== undefined)
-      this.setDevices(this.getDevices());
   }
 
   private dispatch(message: SerialVote.Message) {
@@ -50,7 +45,7 @@ class SerialVoteDevice {
     this.dispatch({ type: "RESULTS", results });
   }
 
-  setDevices(devices: number[]) {
-    this.dispatch({ type: "DEVICES", devices });
+  updateDevices() {
+    this.dispatch({ type: "DEVICES", devices: this.participants });
   }
 }

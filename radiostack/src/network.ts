@@ -7,13 +7,8 @@ namespace Radiostack {
   const ME = control.deviceSerialNumber();
   const BROADCAST = 0;
 
-  interface NetworkLayerPair {
-    networkLayer: NetworkLayer;
-    layer: Layer;
-  }
-
   export class NetworkManager {
-    private readonly addresses: { [key: number]: NetworkLayerPair } = {};
+    private readonly addresses: { [key: number]: NetworkLayer } = {};
     private newConnectionCallback: (address: number) => void;
     private broadcastCallback = (device: number, buffer: Buffer) => { };
 
@@ -25,7 +20,7 @@ namespace Radiostack {
       this.broadcastCallback = cb;
     }
 
-    constructor(private readonly parent: Layer, private readonly wrap = (layer: Layer) => layer) {
+    constructor(private readonly parent: Layer) {
       this.newConnectionCallback = (address: number) => {
         // By default, delete new connections
         this.deleteAddress(address);
@@ -53,15 +48,13 @@ namespace Radiostack {
       }
       // necessary check, address may have been deleted in newConnectionCallback
       if (has(this.addresses, src))
-        this.addresses[src].networkLayer.handleBuffer(packet.msg);
+        this.addresses[src].handleBuffer(packet.msg);
     }
 
     getAddress(address: number) {
-      if (!has(this.addresses, address)) {
-        const networkLayer = new NetworkLayer(address, this.parent);
-        this.addresses[address] = { networkLayer, layer: this.wrap(networkLayer) };
-      }
-      return this.addresses[address].layer;
+      if (!has(this.addresses, address))
+        this.addresses[address] = new NetworkLayer(address, this.parent);
+      return this.addresses[address];
     }
 
     deleteAddress(address: number) {

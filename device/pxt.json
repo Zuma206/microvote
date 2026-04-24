@@ -4,14 +4,12 @@
     "core": "*",
     "radio": "*",
     "@microvote/radiostack": "file:../radiostack",
-    "@microvote/serialvote": "file:../serialvote",
-    "microbit-pxt-flashstorage": "github:bsiever/microbit-pxt-flashstorage#v0.1.4"
+    "@microvote/serialvote": "file:../serialvote"
   },
   "files": [
     "src/main.ts",
     "src/ui.ts",
-    "src/serialvote.ts",
-    "src/storage.ts"
+    "src/serialvote.ts"
   ],
   "public": false,
   "supportedTargets": [

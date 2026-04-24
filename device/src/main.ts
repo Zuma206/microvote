@@ -10,16 +10,14 @@ radio.setTransmitPower(7);
 radio.setGroup(0);
 
 // Setup participant storage
-const participants = new Storage<number[]>("participants", []);
-const getParticipants = () => participants.get();
+const participants: number[] = [];
 
 // Setup radio protocols
-const wrapLayer = (layer: Radiostack.Layer) => new Radiostack.ReliabilityLayer(layer);
-const network = new Radiostack.NetworkManager(Radiostack.uBitRadio, wrapLayer);
-const voting = new Radiostack.ApplicationManager(network, getParticipants);
+const network = new Radiostack.NetworkManager(Radiostack.uBitRadio);
+const voting = new Radiostack.ApplicationManager(network, participants);
 
 // Setup serialvote devices
-const webApp = new SerialVoteDevice(getParticipants);
+const webApp = new SerialVoteDevice(participants);
 
 // Setup user interface
 const ICON_LIFETIME = 1000;
@@ -29,9 +27,10 @@ const ui = new UserInterface(ICON_LIFETIME);
 webApp.onIdentify((address) => voting.identify(address));
 webApp.onStart((choices) => voting.start(choices));
 webApp.onRemove((address) => {
-  const newParticipants = participants.get().filter((i) => address !== i);
-  participants.set(newParticipants);
-  webApp.setDevices(newParticipants);
+  const index = participants.find((value) => value === address);
+  if (index === undefined || index < 0) return;
+  participants.splice(index, 1);
+  webApp.updateDevices();
 });
 
 // Add voting plumming
@@ -41,12 +40,10 @@ voting.onIdentify(() => ui.identify());
 voting.onFailure(() => ui.failure());
 voting.onSuccess(() => ui.success());
 voting.onPair((device) => {
-  const devices = participants.get();
-  if (devices.find((d) => d === device) !== undefined)
+  if (participants.find((d) => d === device) !== undefined)
     return;
-  devices.push(device);
-  participants.set(devices);
-  webApp.setDevices(devices);
+  participants.push(device);
+  webApp.updateDevices();
   ui.paired();
 });
 

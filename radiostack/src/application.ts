@@ -25,7 +25,7 @@ namespace Radiostack {
     private failureCallback?: () => void;
     private sequenceId = 0;
 
-    constructor(private readonly network: NetworkManager, private readonly getParticipants: () => number[]) {
+    constructor(private readonly network: NetworkManager, private readonly participants: number[]) {
       network.onNewConnection((address) => {
         network.getAddress(address).onReceivedBuffer((buffer) => {
           this.handlePacket(address, buffer);
@@ -82,7 +82,7 @@ namespace Radiostack {
         n,
       });
       this.voteHosting = { id, results: newResults(n) };
-      this.getParticipants().forEach(participant => {
+      this.participants.forEach((participant) => {
         const layer = this.network.getAddress(participant);
         layer.sendBuffer({ msg: packet });
       });

@@ -9,7 +9,6 @@
     "src/application.ts",
     "src/radio.ts",
     "src/network.ts",
-    "src/reliability.ts",
     "src/polyfill.ts"
   ],
   "public": false,
