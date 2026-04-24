@@ -69,4 +69,8 @@ class UserInterface {
   identify() {
     this.displayIcon(IconNames.Happy);
   }
+
+  paired() {
+    this.displayIcon(IconNames.Yes);
+  }
 }
