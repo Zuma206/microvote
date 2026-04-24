@@ -13,7 +13,7 @@ class ApplicationManager {
   private sequenceId = 0;
 
   constructor(private readonly network: Radiostack.NetworkManager, private readonly participants?: number[]) {
-    network.onReceivedBuffer((_, buffer) => this.handlePacket(buffer));
+    network.onReceivedBuffer((address, buffer) => this.handlePacket(address, buffer));
   }
 
   onPair(callback: ApplicationManager["pairCallback"]) {
@@ -36,11 +36,11 @@ class ApplicationManager {
     this.participants.forEach((participant) => this.network.sendBuffer(participant, packet));
   }
 
-  private handlePacket(buffer: Buffer) {
+  private handlePacket(address: number, buffer: Buffer) {
     const packet = Radiostack.ApplicationPacket.decode(buffer);
     switch (packet.type) {
       case Radiostack.ApplicationPacketType.Pair:
-        return this.handlePair(packet.id);
+        return this.handlePair(address);
       case Radiostack.ApplicationPacketType.Cast:
         return this.handleCast(packet);
     }

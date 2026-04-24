@@ -4,6 +4,7 @@ serial.setRxBufferSize(SERIAL_BUFFER_SIZE);
 serial.setTxBufferSize(SERIAL_BUFFER_SIZE);
 
 // Setup radio
+radio.setTransmitSerialNumber(true);
 radio.setGroup(0);
 
 // Setup participant storage
@@ -22,8 +23,7 @@ webApp.onStart((choices) => voting.start(choices));
 // Add voting plumming
 voting.onResults((results) => webApp.setResults(results));
 voting.onPair((device) => {
-  if (participants.find((d) => d === device) !== undefined)
-    return;
+  if (participants.indexOf(device) >= 0) return;
   participants.push(device);
   webApp.updateDevices();
 });
