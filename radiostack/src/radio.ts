@@ -11,8 +11,8 @@ namespace Radiostack {
   }
 
   export const uBitRadio: Layer = {
-    onReceivedBuffer: radio.onReceivedBuffer,
-    sendBuffer(options: SendBufferOptions) {
+    onReceivedBuffer: (cb) => radio.onReceivedBuffer(cb),
+    sendBuffer: (options: SendBufferOptions) => {
       radio.sendBuffer(options.msg);
       if (options.onSuccess !== undefined)
         options.onSuccess();
