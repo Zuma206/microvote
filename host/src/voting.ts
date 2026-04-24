@@ -13,12 +13,7 @@ class ApplicationManager {
   private sequenceId = 0;
 
   constructor(private readonly network: Radiostack.NetworkManager, private readonly participants?: number[]) {
-    network.onNewConnection((address) => {
-      network.getAddress(address).onReceivedBuffer((buffer) => {
-        this.handlePacket(buffer);
-      });
-    });
-    network.onBroadcast((_, buffer) => this.handlePacket(buffer));
+    network.onReceivedBuffer((buffer) => this.handlePacket(buffer));
   }
 
   onPair(callback: ApplicationManager["pairCallback"]) {
@@ -38,10 +33,7 @@ class ApplicationManager {
       n,
     });
     this.voteHosting = { id, results: newResults(n) };
-    this.participants.forEach((participant) => {
-      const layer = this.network.getAddress(participant);
-      layer.sendBuffer(packet);
-    });
+    this.participants.forEach((participant) => this.network.sendBuffer(participant, packet));
   }
 
   private handlePacket(buffer: Buffer) {
@@ -87,6 +79,6 @@ class ApplicationManager {
       id: 0,
       n: 0,
     });
-    this.network.getAddress(device).sendBuffer(packet);
+    this.network.sendBuffer(device, packet);
   }
 }

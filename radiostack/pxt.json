@@ -8,8 +8,7 @@
   "files": [
     "src/application.ts",
     "src/radio.ts",
-    "src/network.ts",
-    "src/polyfill.ts"
+    "src/network.ts"
   ],
   "public": false,
   "supportedTargets": [

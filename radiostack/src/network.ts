@@ -8,23 +8,13 @@ namespace Radiostack {
   const BROADCAST = 0;
 
   export class NetworkManager {
-    private readonly addresses: { [key: number]: NetworkLayer } = {};
-    private newConnectionCallback: (address: number) => void;
-    private broadcastCallback = (device: number, buffer: Buffer) => { };
+    private recievedBufferCallback = (buffer: Buffer) => { };
 
-    onNewConnection(cb: NetworkManager["newConnectionCallback"]) {
-      this.newConnectionCallback = cb;
-    }
-
-    onBroadcast(cb: NetworkManager["broadcastCallback"]) {
-      this.broadcastCallback = cb;
+    onReceivedBuffer(cb: NetworkManager["recievedBufferCallback"]) {
+      this.recievedBufferCallback = cb;
     }
 
     constructor(private readonly parent: Layer) {
-      this.newConnectionCallback = (address: number) => {
-        // By default, delete new connections
-        this.deleteAddress(address);
-      };
       this.parent.onReceivedBuffer((buffer) => this.handleReceivedBuffer(buffer));
     }
 
@@ -38,47 +28,16 @@ namespace Radiostack {
 
     private handleReceivedBuffer(buffer: Buffer) {
       const packet = NetworkPacket.decode(buffer);
-      const src = radio.receivedSerial();
-      if (packet.dest === BROADCAST)
-        return this.broadcastCallback(src, packet.msg);
-      if (packet.dest !== ME) return;
-      if (!has(this.addresses, src)) {
-        this.getAddress(src);
-        this.newConnectionCallback(src);
-      }
-      // necessary check, address may have been deleted in newConnectionCallback
-      if (has(this.addresses, src))
-        this.addresses[src].handleBuffer(packet.msg);
+      if (packet.dest !== ME && packet.dest !== BROADCAST) return;
+      this.recievedBufferCallback(packet.msg);
     }
 
-    getAddress(address: number) {
-      if (!has(this.addresses, address))
-        this.addresses[address] = new NetworkLayer(address, this.parent);
-      return this.addresses[address];
-    }
-
-    deleteAddress(address: number) {
-      delete this.addresses[address];
-    }
-  }
-
-  class NetworkLayer implements Layer {
-    private receivedBufferCallback?: (msg: Buffer) => void;
-
-    onReceivedBuffer(cb: NetworkLayer["receivedBufferCallback"]) {
-      this.receivedBufferCallback = cb;
-    }
-
-    constructor(private readonly dest: number, private readonly parent: Layer) { }
-
-    sendBuffer(buffer: Buffer): void {
-      const packet = NetworkPacket.encode({ dest: this.dest, msg: buffer });
+    sendBuffer(dest: number, msg: Buffer) {
+      const packet = NetworkPacket.encode({
+        dest,
+        msg,
+      });
       this.parent.sendBuffer(packet);
-    }
-
-    handleBuffer(buffer: Buffer) {
-      if (this.receivedBufferCallback)
-        this.receivedBufferCallback(buffer);
     }
   }
 }
