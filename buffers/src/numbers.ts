@@ -33,4 +33,5 @@ namespace Buffers {
   export const uInt8 = numberEncoding(NumberFormat.UInt8LE, 8);
   export const uInt16 = numberEncoding(NumberFormat.UInt16LE, 16);
   export const uInt32 = numberEncoding(NumberFormat.UInt32LE, 32);
+  export const int32 = numberEncoding(NumberFormat.Int32LE, 32);
 }

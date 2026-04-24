@@ -1,6 +1,6 @@
 namespace Radiostack {
   const NetworkPacket = Buffers.struct({
-    dest: Buffers.uInt32.order(0),
+    dest: Buffers.int32.order(0),
     msg: Buffers.buffer(Buffers.uInt8).order(1),
   });
 
