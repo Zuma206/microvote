@@ -8,8 +8,7 @@ const network = new Radiostack.NetworkManager(Radiostack.uBitRadio);
 const voting = new ApplicationManager(network);
 
 // Setup user interface
-const ICON_LIFETIME = 1000;
-const ui = new UserInterface(ICON_LIFETIME);
+const ui = new UserInterface();
 
 // Add voting plumming
 voting.onStart((choices) => ui.start(choices));
