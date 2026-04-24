@@ -8,7 +8,9 @@
   },
   "files": [
     "src/application.ts",
-    "src/radio.ts"
+    "src/radio.ts",
+    "src/network.ts",
+    "src/reliability.ts"
   ],
   "public": false,
   "supportedTargets": [
