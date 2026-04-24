@@ -31,17 +31,17 @@ namespace Radiostack {
       const packet = NetworkPacket.decode(buffer);
       if (packet.dest != ME) return;
       const src = radio.receivedSerial();
-      if (!(src in this.addresses)) {
+      if (!has(this.addresses, src)) {
         this.getAddress(src);
         this.newConnectionCallback(src);
       }
       // necessary check, address may have been deleted in newConnectionCallback
-      if (src in this.addresses)
+      if (has(this.addresses, src))
         this.addresses[src].networkLayer.handleBuffer(packet.msg);
     }
 
     getAddress(address: number) {
-      if (!(address in this.addresses)) {
+      if (!has(this.addresses, address)) {
         const networkLayer = new NetworkLayer(address, this.parent);
         this.addresses[address] = { networkLayer, layer: this.wrap(networkLayer) };
       }

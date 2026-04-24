@@ -90,7 +90,7 @@ namespace Radiostack {
 
     private handleMessage(id: number, msg: Buffer) {
       this.ack(id);
-      if (id in this.receivedMessages) return;
+      if (has(this.receivedMessages, id)) return;
       if (this.receivedBufferCallback !== undefined)
         this.receivedBufferCallback(msg);
       control.setInterval(
