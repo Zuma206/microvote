@@ -1,8 +1,8 @@
 namespace Radiostack {
   type ApplicationPacket = typeof ApplicationPacket.zero;
   const ApplicationPacket = Buffers.struct({
-    flags: Buffers.flags({ start: 0, identify: 1 }).order(0),
-    id: Buffers.uInt16LE.order(1),
+    flags: Buffers.flags({ start: 0, identify: 1, pair: 2 }).order(0),
+    id: Buffers.uInt32LE.order(1),
     n: Buffers.uInt8.order(2),
   });
 
@@ -19,6 +19,7 @@ namespace Radiostack {
     private voteHosting?: { id: number, results: number[] };
     private resultsCallback?: (results: number[]) => void;
     private startCallback?: (choices: number) => void;
+    private pairCallback?: (device: number) => void;
     private identifyCallback?: () => void;
     private successCallback?: () => void;
     private failureCallback?: () => void;
@@ -30,10 +31,15 @@ namespace Radiostack {
           this.handlePacket(address, buffer);
         });
       });
+      network.onBroadcast((address, buffer) => this.handlePacket(address, buffer));
     }
 
     onSuccess(callback: ApplicationManager["successCallback"]) {
       this.successCallback = callback;
+    }
+
+    onPair(callback: ApplicationManager["pairCallback"]) {
+      this.pairCallback = callback;
     }
 
     onIdentify(callback: ApplicationManager["identifyCallback"]) {
@@ -88,7 +94,25 @@ namespace Radiostack {
         return this.handleStart(address, packet);
       else if (packet.flags.identify === true)
         return this.handleIdentify();
+      else if (packet.flags.pair === true)
+        return this.handlePair(packet.id);
       this.handleCast(packet);
+    }
+
+    private handlePair(device: number) {
+      if (this.pairCallback !== undefined)
+        this.pairCallback(device);
+    }
+
+    pair() {
+      const packet = ApplicationPacket.encode({
+        id: control.deviceSerialNumber(),
+        flags: { pair: true },
+        n: 0,
+      });
+      radio.setTransmitPower(0);
+      this.network.broadcast(packet);
+      radio.setTransmitPower(7);
     }
 
     private handleStart(address: number, packet: ApplicationPacket) {

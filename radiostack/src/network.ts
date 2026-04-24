@@ -5,6 +5,7 @@ namespace Radiostack {
   });
 
   const ME = control.deviceSerialNumber();
+  const BROADCAST = 0;
 
   interface NetworkLayerPair {
     networkLayer: NetworkLayer;
@@ -14,9 +15,14 @@ namespace Radiostack {
   export class NetworkManager {
     private readonly addresses: { [key: number]: NetworkLayerPair } = {};
     private newConnectionCallback: (address: number) => void;
+    private broadcastCallback = (device: number, buffer: Buffer) => { };
 
     onNewConnection(cb: NetworkManager["newConnectionCallback"]) {
       this.newConnectionCallback = cb;
+    }
+
+    onBroadcast(cb: NetworkManager["broadcastCallback"]) {
+      this.broadcastCallback = cb;
     }
 
     constructor(private readonly parent: Layer, private readonly wrap = (layer: Layer) => layer) {
@@ -27,10 +33,20 @@ namespace Radiostack {
       this.parent.onReceivedBuffer((buffer) => this.handleReceivedBuffer(buffer));
     }
 
+    broadcast(msg: Buffer) {
+      const packet = NetworkPacket.encode({
+        dest: BROADCAST,
+        msg,
+      });
+      this.parent.sendBuffer({ msg: packet });
+    }
+
     private handleReceivedBuffer(buffer: Buffer) {
       const packet = NetworkPacket.decode(buffer);
-      if (packet.dest != ME) return;
       const src = radio.receivedSerial();
+      if (packet.dest === BROADCAST)
+        return this.broadcastCallback(src, packet.msg);
+      if (packet.dest !== ME) return;
       if (!has(this.addresses, src)) {
         this.getAddress(src);
         this.newConnectionCallback(src);
