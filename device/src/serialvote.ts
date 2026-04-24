@@ -1,3 +1,15 @@
+interface SerialDevice {
+  onDataReceived(delimeter: string, cb: () => void): void;
+  readUntil(delimeter: string): string;
+  writeLine(line: string): void;
+}
+
+const usbSerial: SerialDevice = {
+  onDataReceived: (delimeter, cb) => serial.onDataReceived(delimeter, cb),
+  readUntil: (delimeter) => serial.readUntil(delimeter),
+  writeLine: (line) => serial.writeLine(line),
+};
+
 class SerialVoteDevice {
   private static readonly DELIMETER = "\n";
   private startCallback?: (choices: number) => void;
@@ -16,13 +28,13 @@ class SerialVoteDevice {
     this.removeCallback = callback;
   }
 
-  constructor() {
+  constructor(private readonly serial: SerialDevice) {
     const onDataReceived = () => this.onMessageReceived();
-    serial.onDataReceived(SerialVoteDevice.DELIMETER, onDataReceived);
+    this.serial.onDataReceived(SerialVoteDevice.DELIMETER, onDataReceived);
   }
 
   private onMessageReceived() {
-    const line = serial.readUntil(SerialVoteDevice.DELIMETER);
+    const line = this.serial.readUntil(SerialVoteDevice.DELIMETER);
     const message = JSON.parse(line) as SerialVote.Message;
     switch (message.type) {
       case "START": if (this.startCallback) this.startCallback(message.choices);
@@ -36,7 +48,7 @@ class SerialVoteDevice {
 
   private dispatch(message: SerialVote.Message) {
     const line = JSON.stringify(message);
-    serial.writeLine(line);
+    this.serial.writeLine(line);
   }
 
   setResults(results: number[]) {
