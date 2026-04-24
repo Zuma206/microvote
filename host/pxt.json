@@ -1,0 +1,18 @@
+{
+  "name": "@microvote/host",
+  "dependencies": {
+    "core": "*",
+    "radio": "*",
+    "@microvote/radiostack": "file:../radiostack",
+    "@microvote/serialvote": "file:../serialvote"
+  },
+  "files": [
+    "src/main.ts",
+    "src/serialvote.ts"
+  ],
+  "public": false,
+  "supportedTargets": [
+    "microbit"
+  ],
+  "preferredEditor": "blocksprj"
+}

@@ -8,8 +8,7 @@
   },
   "files": [
     "src/main.ts",
-    "src/ui.ts",
-    "src/serialvote.ts"
+    "src/ui.ts"
   ],
   "public": false,
   "supportedTargets": [

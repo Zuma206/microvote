@@ -25,7 +25,7 @@ namespace Radiostack {
     private failureCallback?: () => void;
     private sequenceId = 0;
 
-    constructor(private readonly network: NetworkManager, private readonly participants: number[]) {
+    constructor(private readonly network: NetworkManager, private readonly participants?: number[]) {
       network.onNewConnection((address) => {
         network.getAddress(address).onReceivedBuffer((buffer) => {
           this.handlePacket(address, buffer);
@@ -75,6 +75,7 @@ namespace Radiostack {
     }
 
     start(n: number) {
+      if (this.participants === undefined) return;
       const id = this.sequenceId++;
       const packet = ApplicationPacket.encode({
         flags: { start: true },
