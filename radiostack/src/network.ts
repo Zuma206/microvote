@@ -13,16 +13,17 @@ namespace Radiostack {
 
   export class NetworkManager {
     private readonly addresses: { [key: number]: NetworkLayerPair } = {};
-    private newConnectionCallback = (address: number) => {
-      // By default, delete new connections
-      this.deleteAddress(address);
-    };
+    private newConnectionCallback: (address: number) => void;
 
     onNewConnection(cb: NetworkManager["newConnectionCallback"]) {
       this.newConnectionCallback = cb;
     }
 
     constructor(private readonly parent: Layer, private readonly wrap = (layer: Layer) => layer) {
+      this.newConnectionCallback = (address: number) => {
+        // By default, delete new connections
+        this.deleteAddress(address);
+      };
       this.parent.onReceivedBuffer((buffer) => this.handleReceivedBuffer(buffer));
     }
 
