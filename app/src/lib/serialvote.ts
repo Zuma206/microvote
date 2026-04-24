@@ -40,14 +40,6 @@ export class SerialVoteDevice {
     return this.dispatch({ type: "START", choices });
   }
 
-  identify(device: number) {
-    return this.dispatch({ type: "IDENTIFY", device });
-  }
-
-  remove(device: number) {
-    return this.dispatch({ type: "REMOVE", device });
-  }
-
   devices() {
     return this.dispatch({ type: "DEVICES", devices: [] });
   }
