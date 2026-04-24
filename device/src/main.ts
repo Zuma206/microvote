@@ -6,7 +6,7 @@ serial.setTxBufferSize(SERIAL_BUFFER_SIZE);
 
 // Setup radio
 radio.setTransmitSerialNumber(true);
-radio.setTransmitPower(8);
+radio.setTransmitPower(7);
 radio.setGroup(0);
 
 // Setup participant storage
