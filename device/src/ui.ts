@@ -15,8 +15,8 @@ class UserInterface {
   }
 
   start(choices: number) {
-    this.selected = 0;
     this.choices = choices;
+    this.selected = 0;
     this.render();
   }
 
@@ -30,7 +30,7 @@ class UserInterface {
   }
 
   private right() {
-    if (this.choices) {
+    if (this.choices !== undefined) {
       this.selected++;
       if (this.selected >= this.choices)
         this.selected = 0;
@@ -39,7 +39,7 @@ class UserInterface {
   }
 
   private left() {
-    if (this.choices) {
+    if (this.choices !== undefined) {
       this.selected--;
       if (this.selected < 0)
         this.selected = this.choices - 1;
