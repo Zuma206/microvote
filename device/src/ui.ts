@@ -61,14 +61,6 @@ class UserInterface {
     this.render();
   }
 
-  success() {
-    this.displayIcon(IconNames.Yes);
-  }
-
-  failure() {
-    this.displayIcon(IconNames.No);
-  }
-
   identify() {
     this.displayIcon(IconNames.Happy);
   }

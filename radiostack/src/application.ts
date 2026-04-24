@@ -21,8 +21,6 @@ namespace Radiostack {
     private startCallback?: (choices: number) => void;
     private pairCallback?: (device: number) => void;
     private identifyCallback?: () => void;
-    private successCallback?: () => void;
-    private failureCallback?: () => void;
     private sequenceId = 0;
 
     constructor(private readonly network: NetworkManager, private readonly participants?: number[]) {
@@ -34,20 +32,12 @@ namespace Radiostack {
       network.onBroadcast((address, buffer) => this.handlePacket(address, buffer));
     }
 
-    onSuccess(callback: ApplicationManager["successCallback"]) {
-      this.successCallback = callback;
-    }
-
     onPair(callback: ApplicationManager["pairCallback"]) {
       this.pairCallback = callback;
     }
 
     onIdentify(callback: ApplicationManager["identifyCallback"]) {
       this.identifyCallback = callback;
-    }
-
-    onFailure(callback: ApplicationManager["failureCallback"]) {
-      this.failureCallback = callback;
     }
 
     onResults(callback: ApplicationManager["resultsCallback"]) {
@@ -66,11 +56,7 @@ namespace Radiostack {
         n,
       });
       const host = this.network.getAddress(this.voteParticipation.host);
-      host.sendBuffer({
-        onFailure: this.failureCallback,
-        onSuccess: this.successCallback,
-        msg: packet,
-      });
+      host.sendBuffer(packet);
       this.voteParticipation = undefined;
     }
 
@@ -85,7 +71,7 @@ namespace Radiostack {
       this.voteHosting = { id, results: newResults(n) };
       this.participants.forEach((participant) => {
         const layer = this.network.getAddress(participant);
-        layer.sendBuffer({ msg: packet });
+        layer.sendBuffer(packet);
       });
     }
 
@@ -138,8 +124,7 @@ namespace Radiostack {
         id: 0,
         n: 0,
       });
-      this.network.getAddress(device)
-        .sendBuffer({ msg: packet });
+      this.network.getAddress(device).sendBuffer(packet);
     }
 
     private handleIdentify() {
