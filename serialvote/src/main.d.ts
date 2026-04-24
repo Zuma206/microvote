@@ -4,6 +4,5 @@ declare namespace SerialVote {
     { type: "RESULTS", results: number[] } |
     { type: "DEVICES", devices: number[] } |
     { type: "IDENTIFY", device: number } |
-    { type: "REMOVE", device: number } |
-    { type: "PAIR", device: number };
+    { type: "REMOVE", device: number };
 }

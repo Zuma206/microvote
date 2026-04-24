@@ -1,21 +1,3 @@
-interface SerialDevice {
-  onDataReceived(delimeter: string, cb: () => void): void;
-  readUntil(delimeter: string): string;
-  writeLine(line: string): void;
-}
-
-const serialDevice: SerialDevice = {
-  onDataReceived: (delimeter, cb) => serial.onDataReceived(delimeter, cb),
-  readUntil: (delimeter) => serial.readUntil(delimeter),
-  writeLine: (line) => serial.writeLine(line),
-};
-
-const edgeSerialDevice: SerialDevice = {
-  onDataReceived: (delimeter, cb) => edgeserial.onDataReceived(delimeter, cb),
-  readUntil: (delimeter) => edgeserial.readUntil(delimeter),
-  writeLine: (line) => edgeserial.writeLine(line),
-};
-
 class SerialVoteDevice {
   private static readonly DELIMETER = "\n";
   private startCallback = (choices: number) => { };
@@ -39,13 +21,13 @@ class SerialVoteDevice {
     this.pairCallback = callback;
   }
 
-  constructor(private readonly serial: SerialDevice, private readonly getDevices?: () => number[]) {
+  constructor(private readonly getDevices?: () => number[]) {
     const onDataReceived = () => this.onMessageReceived();
-    this.serial.onDataReceived(SerialVoteDevice.DELIMETER, onDataReceived);
+    serial.onDataReceived(SerialVoteDevice.DELIMETER, onDataReceived);
   }
 
   private onMessageReceived() {
-    const line = this.serial.readUntil(SerialVoteDevice.DELIMETER);
+    const line = serial.readUntil(SerialVoteDevice.DELIMETER);
     const message = JSON.parse(line) as SerialVote.Message;
     switch (message.type) {
       case "START":
@@ -68,7 +50,7 @@ class SerialVoteDevice {
 
   private dispatch(message: SerialVote.Message) {
     const line = JSON.stringify(message);
-    this.serial.writeLine(line);
+    serial.writeLine(line);
   }
 
   setResults(results: number[]) {

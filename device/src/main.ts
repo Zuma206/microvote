@@ -1,8 +1,5 @@
 // Setup Serial
 const SERIAL_BUFFER_SIZE = 128;
-edgeserial.redirect(EdgeSerialPin.P0, EdgeSerialPin.P1, EdgeBaudRate.BaudRate115200);
-edgeserial.setRxBufferSize(SERIAL_BUFFER_SIZE);
-edgeserial.setTxBufferSize(SERIAL_BUFFER_SIZE);
 serial.setBaudRate(BaudRate.BaudRate115200);
 serial.setRxBufferSize(SERIAL_BUFFER_SIZE);
 serial.setTxBufferSize(SERIAL_BUFFER_SIZE);
@@ -22,8 +19,7 @@ const network = new Radiostack.NetworkManager(Radiostack.uBitRadio, wrapLayer);
 const voting = new Radiostack.ApplicationManager(network, getParticipants);
 
 // Setup serialvote devices
-const webApp = new SerialVoteDevice(serialDevice, getParticipants);
-const pairingDevice = new SerialVoteDevice(edgeSerialDevice);
+const webApp = new SerialVoteDevice(getParticipants);
 
 // Setup user interface
 const ICON_LIFETIME = 1000;
@@ -47,22 +43,3 @@ voting.onSuccess(() => ui.success());
 
 // Add ui plumming
 ui.onSelect((choice) => voting.cast(choice));
-
-// Add paring device plumming
-pairingDevice.onPair((device) => {
-  const newParticipants = participants.get();
-  if (newParticipants.find((i) => i === device) !== undefined)
-    return;
-  newParticipants.push(device);
-  participants.set(newParticipants);
-  webApp.setDevices(newParticipants);
-  ui.paired();
-});
-
-// Send pairing messages
-const PAIRING_DELAY = 500;
-control.setInterval(
-  () => pairingDevice.pair(),
-  PAIRING_DELAY,
-  control.IntervalMode.Interval,
-);

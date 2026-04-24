@@ -5,9 +5,8 @@
     "radio": "*",
     "microphone": "*",
     "@microvote/radiostack": "file:../radiostack",
-    "microbit-pxt-flashstorage": "github:bsiever/microbit-pxt-flashstorage",
-    "pxt-edge-serial": "github:JohnVidler/pxt-edge-serial",
-    "@microvote/serialvote": "file:../serialvote"
+    "@microvote/serialvote": "file:../serialvote",
+    "microbit-pxt-flashstorage": "github:bsiever/microbit-pxt-flashstorage#v0.1.4"
   },
   "files": [
     "src/main.ts",
