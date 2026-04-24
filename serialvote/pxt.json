@@ -2,8 +2,7 @@
   "name": "@microvote/serialvote",
   "dependencies": {
     "core": "*",
-    "radio": "*",
-    "microphone": "*"
+    "radio": "*"
   },
   "files": [
     "src/main.d.ts"

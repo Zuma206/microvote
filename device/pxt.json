@@ -3,7 +3,6 @@
   "dependencies": {
     "core": "*",
     "radio": "*",
-    "microphone": "*",
     "@microvote/radiostack": "file:../radiostack",
     "@microvote/serialvote": "file:../serialvote",
     "microbit-pxt-flashstorage": "github:bsiever/microbit-pxt-flashstorage#v0.1.4"
