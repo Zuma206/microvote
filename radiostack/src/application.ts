@@ -1,8 +1,8 @@
 namespace Radiostack {
   type ApplicationPacket = typeof ApplicationPacket.zero;
   const ApplicationPacket = Buffers.struct({
-    id: Buffers.uInt16LE.order(0),
-    flags: Buffers.flags({ start: 0 }).order(1),
+    flags: Buffers.flags({ start: 0, identify: 1 }).order(0),
+    id: Buffers.uInt16LE.order(1),
     n: Buffers.uInt8.order(2),
   });
 
@@ -19,6 +19,7 @@ namespace Radiostack {
     private voteHosting?: { id: number, results: number[] };
     private resultsCallback?: (results: number[]) => void;
     private startCallback?: (choices: number) => void;
+    private identifyCallback?: () => void;
     private successCallback?: () => void;
     private failureCallback?: () => void;
     private sequenceId = 0;
@@ -33,6 +34,10 @@ namespace Radiostack {
 
     onSuccess(callback: ApplicationManager["successCallback"]) {
       this.successCallback = callback;
+    }
+
+    onIdentify(callback: ApplicationManager["identifyCallback"]) {
+      this.identifyCallback = callback;
     }
 
     onFailure(callback: ApplicationManager["failureCallback"]) {
@@ -81,6 +86,8 @@ namespace Radiostack {
       const packet = ApplicationPacket.decode(buffer);
       if (packet.flags.start === true)
         return this.handleStart(address, packet);
+      else if (packet.flags.identify === true)
+        return this.handleIdentify();
       this.handleCast(packet);
     }
 
@@ -98,6 +105,21 @@ namespace Radiostack {
       this.voteHosting.results[packet.n]++;
       if (this.resultsCallback !== undefined)
         this.resultsCallback(this.voteHosting.results);
+    }
+
+    identify(device: number) {
+      const packet = ApplicationPacket.encode({
+        flags: { identify: true },
+        id: 0,
+        n: 0,
+      });
+      this.network.getAddress(device)
+        .sendBuffer({ msg: packet });
+    }
+
+    private handleIdentify() {
+      if (this.identifyCallback !== undefined)
+        this.identifyCallback();
     }
   }
 }
