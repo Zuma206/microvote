@@ -1,9 +1,11 @@
 // Setup Serial
 const SERIAL_BUFFER_SIZE = 128;
-serial.setRxBufferSize(SERIAL_BUFFER_SIZE);
-serial.setTxBufferSize(SERIAL_BUFFER_SIZE);
+edgeserial.redirect(EdgeSerialPin.P0, EdgeSerialPin.P1, EdgeBaudRate.BaudRate115200);
 edgeserial.setRxBufferSize(SERIAL_BUFFER_SIZE);
 edgeserial.setTxBufferSize(SERIAL_BUFFER_SIZE);
+serial.setBaudRate(BaudRate.BaudRate115200);
+serial.setRxBufferSize(SERIAL_BUFFER_SIZE);
+serial.setTxBufferSize(SERIAL_BUFFER_SIZE);
 
 // Setup radio
 radio.setTransmitSerialNumber(true);
@@ -53,5 +55,14 @@ pairingDevice.onPair((device) => {
     return;
   newParticipants.push(device);
   participants.set(newParticipants);
+  webApp.setDevices(newParticipants);
   ui.paired();
 });
+
+// Send pairing messages
+const PAIRING_DELAY = 500;
+control.setInterval(
+  () => pairingDevice.pair(),
+  PAIRING_DELAY,
+  control.IntervalMode.Interval,
+);
