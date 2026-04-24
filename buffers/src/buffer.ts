@@ -7,7 +7,7 @@ namespace Buffers {
       if (lengthEncoding)
         this.lengthEncoding = lengthEncoding;
       else
-        this.lengthEncoding = uInt32LE;
+        this.lengthEncoding = uInt32;
     }
 
     encodeAt(buffer: Buffer, offset: number, value: Buffer): number {
