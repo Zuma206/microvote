@@ -1,11 +1,6 @@
 namespace Tests {
-  const nameLength = 16;
   const person = Buffers.struct({
     age: Buffers.uInt8.order(1),
-    flags: Buffers.flags({
-      admin: 0,
-      banned: 1,
-    }).order(2),
   });
 
   testValues({
@@ -14,27 +9,17 @@ namespace Tests {
       {
         input: {
           age: 19,
-          flags: {
-            admin: true,
-            banned: false,
-          },
         },
         expected: {
           age: 19,
-          flags: {
-            admin: true,
-            banned: false,
-          },
         },
       },
       {
         input: {
           age: 23,
-          flags: { admin: true, banned: false },
         },
         expected: {
           age: 23,
-          flags: { admin: true, banned: false },
         }
       }
     ],

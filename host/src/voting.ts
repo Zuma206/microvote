@@ -28,7 +28,7 @@ class ApplicationManager {
     if (this.participants === undefined) return;
     const id = this.sequenceId++;
     const packet = Radiostack.ApplicationPacket.encode({
-      flags: { start: true },
+      type: Radiostack.ApplicationPacketType.Start,
       id: id,
       n,
     });
@@ -38,13 +38,12 @@ class ApplicationManager {
 
   private handlePacket(buffer: Buffer) {
     const packet = Radiostack.ApplicationPacket.decode(buffer);
-    if (packet.flags.start === true)
-      return;
-    else if (packet.flags.identify === true)
-      return;
-    else if (packet.flags.pair === true)
-      return this.handlePair(packet.id);
-    this.handleCast(packet);
+    switch (packet.type) {
+      case Radiostack.ApplicationPacketType.Pair:
+        return this.handlePair(packet.id);
+      case Radiostack.ApplicationPacketType.Cast:
+        return this.handleCast(packet);
+    }
   }
 
   private handlePair(device: number) {
@@ -54,8 +53,8 @@ class ApplicationManager {
 
   pair() {
     const packet = Radiostack.ApplicationPacket.encode({
+      type: Radiostack.ApplicationPacketType.Pair,
       id: control.deviceSerialNumber(),
-      flags: { pair: true },
       n: 0,
     });
     radio.setTransmitPower(0);
@@ -75,7 +74,7 @@ class ApplicationManager {
 
   identify(device: number) {
     const packet = Radiostack.ApplicationPacket.encode({
-      flags: { identify: true },
+      type: Radiostack.ApplicationPacketType.Identify,
       id: 0,
       n: 0,
     });
