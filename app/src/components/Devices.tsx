@@ -7,11 +7,9 @@ interface DeviceProps {
 
 function Device(props: DeviceProps) {
   return (
-    <Grid.Col span={3}>
-      <Card withBorder p="xl">
-        <Card.Section><Text size="lg" pb="sm" fw="bold">🕹️ {props.device}</Text></Card.Section>
-      </Card>
-    </Grid.Col>
+    <Card withBorder p="xl">
+      <Text size="lg" pb="sm" fw="bold">🕹️ {props.device}</Text>
+    </Card>
   );
 }
 
