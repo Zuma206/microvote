@@ -4,17 +4,24 @@ interface SerialDevice {
   writeLine(line: string): void;
 }
 
-const usbSerial: SerialDevice = {
+const serialDevice: SerialDevice = {
   onDataReceived: (delimeter, cb) => serial.onDataReceived(delimeter, cb),
   readUntil: (delimeter) => serial.readUntil(delimeter),
   writeLine: (line) => serial.writeLine(line),
 };
 
+const edgeSerialDevice: SerialDevice = {
+  onDataReceived: (delimeter, cb) => edgeserial.onDataReceived(delimeter, cb),
+  readUntil: (delimeter) => edgeserial.readUntil(delimeter),
+  writeLine: (line) => edgeserial.writeLine(line),
+};
+
 class SerialVoteDevice {
   private static readonly DELIMETER = "\n";
-  private startCallback?: (choices: number) => void;
-  private identifyCallback?: (device: number) => void;
-  private removeCallback?: (device: number) => void;
+  private startCallback = (choices: number) => { };
+  private identifyCallback = (device: number) => { };
+  private removeCallback = (device: number) => { };
+  private pairCallback = (device: number) => { };
 
   onStart(callback: SerialVoteDevice["startCallback"]) {
     this.startCallback = callback;
@@ -28,7 +35,11 @@ class SerialVoteDevice {
     this.removeCallback = callback;
   }
 
-  constructor(private readonly serial: SerialDevice) {
+  onPair(callback: SerialVoteDevice["pairCallback"]) {
+    this.pairCallback = callback;
+  }
+
+  constructor(private readonly serial: SerialDevice, private readonly getDevices?: () => number[]) {
     const onDataReceived = () => this.onMessageReceived();
     this.serial.onDataReceived(SerialVoteDevice.DELIMETER, onDataReceived);
   }
@@ -37,13 +48,22 @@ class SerialVoteDevice {
     const line = this.serial.readUntil(SerialVoteDevice.DELIMETER);
     const message = JSON.parse(line) as SerialVote.Message;
     switch (message.type) {
-      case "START": if (this.startCallback) this.startCallback(message.choices);
-        break;
-      case "IDENTIFY": if (this.identifyCallback) return this.identifyCallback(message.device);
-        break;
-      case "REMOVE": if (this.removeCallback) return this.removeCallback(message.device);
-        break;
+      case "START":
+        return this.startCallback(message.choices);
+      case "IDENTIFY":
+        return this.identifyCallback(message.device);
+      case "REMOVE":
+        return this.removeCallback(message.device);
+      case "DEVICES":
+        return this.devices();
+      case "PAIR":
+        return this.pairCallback(message.device);
     }
+  }
+
+  private devices() {
+    if (this.getDevices !== undefined)
+      this.setDevices(this.getDevices());
   }
 
   private dispatch(message: SerialVote.Message) {
