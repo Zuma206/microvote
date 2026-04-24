@@ -5,11 +5,9 @@
     "radio": "*"
   },
   "files": [
-    "src/arrays.ts",
     "src/encoding.ts",
     "src/flags.ts",
     "src/numbers.ts",
-    "src/strings.ts",
     "src/struct.ts",
     "src/buffer.ts"
   ],
