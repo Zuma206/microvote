@@ -1,0 +1,7 @@
+{
+  "links": {
+    "@microvote/radiostack": "../radiostack",
+    "@microvote/buffers": "../buffers",
+    "@microvote/serialvote": "../serialvote"
+  }
+}

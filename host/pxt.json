@@ -3,14 +3,13 @@
   "dependencies": {
     "core": "*",
     "radio": "*",
-    "microphone": "*",
     "@microvote/radiostack": "file:../radiostack",
     "@microvote/serialvote": "file:../serialvote"
   },
   "files": [
     "src/main.ts",
     "src/serialvote.ts",
-    "src/ui.ts"
+    "src/voting.ts"
   ],
   "public": false,
   "supportedTargets": [

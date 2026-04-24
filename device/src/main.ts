@@ -1,0 +1,18 @@
+// Setup radio
+radio.setTransmitSerialNumber(true);
+radio.setTransmitPower(7);
+radio.setGroup(0);
+
+// Setup radio protocols
+const network = new Radiostack.NetworkManager(Radiostack.uBitRadio);
+const voting = new ApplicationManager(network);
+
+// Setup user interface
+const ui = new UserInterface();
+
+// Add voting plumming
+voting.onStart((choices) => ui.start(choices));
+
+// Add ui plumming
+ui.onSelect((choice) => voting.cast(choice));
+ui.onPair(() => voting.pair());

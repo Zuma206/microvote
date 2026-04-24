@@ -1,14 +1,15 @@
 {
-  "name": "@microvote/client",
+  "name": "@microvote/device",
   "dependencies": {
     "core": "*",
     "radio": "*",
-    "microphone": "*",
-    "@microvote/radiostack": "file:../radiostack"
+    "@microvote/radiostack": "file:../radiostack",
+    "@microvote/serialvote": "file:../serialvote"
   },
   "files": [
     "src/main.ts",
-    "src/ui.ts"
+    "src/ui.ts",
+    "src/voting.ts"
   ],
   "public": false,
   "supportedTargets": [
