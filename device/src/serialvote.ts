@@ -78,4 +78,8 @@ class SerialVoteDevice {
   setDevices(devices: number[]) {
     this.dispatch({ type: "DEVICES", devices });
   }
+
+  pair() {
+    this.dispatch({ type: "PAIR", device: control.deviceSerialNumber() });
+  }
 }
