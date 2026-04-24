@@ -1,5 +1,5 @@
 {
-  "name": "@microvote/client",
+  "name": "@microvote/device",
   "dependencies": {
     "core": "*",
     "radio": "*",
