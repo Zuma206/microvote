@@ -6,15 +6,23 @@ namespace Radiostack {
 
   const ME = control.deviceSerialNumber();
 
-  export class NetworkManager {
-    private receivedBufferCallback?: (address: number, buffer: Buffer) => void;
-    private readonly addresses: { [key: number]: NetworkLayer } = {};
+  interface NetworkLayerPair {
+    networkLayer: NetworkLayer;
+    layer: Layer;
+  }
 
-    onReceivedBuffer(cb: NetworkManager["receivedBufferCallback"]) {
-      this.receivedBufferCallback = cb;
+  export class NetworkManager {
+    private readonly addresses: { [key: number]: NetworkLayerPair } = {};
+    private newConnectionCallback = (address: number) => {
+      // By default, delete new connections
+      this.deleteAddress(address);
+    };
+
+    onNewConnection(cb: NetworkManager["newConnectionCallback"]) {
+      this.newConnectionCallback = cb;
     }
 
-    constructor(private readonly parent: Layer) {
+    constructor(private readonly parent: Layer, private readonly wrap = (layer: Layer) => layer) {
       this.parent.onReceivedBuffer((buffer) => this.handleReceivedBuffer(buffer));
     }
 
@@ -23,16 +31,20 @@ namespace Radiostack {
       if (packet.dest != ME) return;
       const src = radio.receivedSerial();
       if (!(src in this.addresses)) {
-        if (this.receivedBufferCallback !== undefined)
-          this.receivedBufferCallback(src, buffer);
-      } else
-        this.addresses[src].handleBuffer(packet.msg);
+        this.getAddress(src);
+        this.newConnectionCallback(src);
+      }
+      // necessary check, address may have been deleted in newConnectionCallback
+      if (src in this.addresses)
+        this.addresses[src].networkLayer.handleBuffer(packet.msg);
     }
 
     getAddress(address: number) {
-      if (!(address in this.addresses))
-        this.addresses[address] = new NetworkLayer(address, this.parent);
-      return this.addresses[address];
+      if (!(address in this.addresses)) {
+        const networkLayer = new NetworkLayer(address, this.parent);
+        this.addresses[address] = { networkLayer, layer: this.wrap(networkLayer) };
+      }
+      return this.addresses[address].layer;
     }
 
     deleteAddress(address: number) {
