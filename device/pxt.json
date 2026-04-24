@@ -4,7 +4,8 @@
     "core": "*",
     "radio": "*",
     "microphone": "*",
-    "@microvote/radiostack": "file:../radiostack"
+    "@microvote/radiostack": "file:../radiostack",
+    "microbit-pxt-flashstorage": "github:bsiever/microbit-pxt-flashstorage"
   },
   "files": [
     "src/main.ts",
