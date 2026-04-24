@@ -3,7 +3,6 @@ class SerialVoteDevice {
   private startCallback = (choices: number) => { };
   private identifyCallback = (device: number) => { };
   private removeCallback = (device: number) => { };
-  private pairCallback = (device: number) => { };
 
   onStart(callback: SerialVoteDevice["startCallback"]) {
     this.startCallback = callback;
@@ -15,10 +14,6 @@ class SerialVoteDevice {
 
   onRemove(callback: SerialVoteDevice["removeCallback"]) {
     this.removeCallback = callback;
-  }
-
-  onPair(callback: SerialVoteDevice["pairCallback"]) {
-    this.pairCallback = callback;
   }
 
   constructor(private readonly getDevices?: () => number[]) {
@@ -38,8 +33,6 @@ class SerialVoteDevice {
         return this.removeCallback(message.device);
       case "DEVICES":
         return this.devices();
-      case "PAIR":
-        return this.pairCallback(message.device);
     }
   }
 
@@ -59,9 +52,5 @@ class SerialVoteDevice {
 
   setDevices(devices: number[]) {
     this.dispatch({ type: "DEVICES", devices });
-  }
-
-  pair() {
-    this.dispatch({ type: "PAIR", device: control.deviceSerialNumber() });
   }
 }
