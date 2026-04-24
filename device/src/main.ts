@@ -5,7 +5,7 @@ radio.setGroup(0);
 
 // Setup radio protocols
 const network = new Radiostack.NetworkManager(Radiostack.uBitRadio);
-const voting = new Radiostack.ApplicationManager(network);
+const voting = new ApplicationManager(network);
 
 // Setup user interface
 const ICON_LIFETIME = 1000;

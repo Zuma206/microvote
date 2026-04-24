@@ -14,7 +14,7 @@ const participants: number[] = [];
 
 // Setup radio protocols
 const network = new Radiostack.NetworkManager(Radiostack.uBitRadio);
-const voting = new Radiostack.ApplicationManager(network, participants);
+const voting = new ApplicationManager(network, participants);
 
 // Setup serialvote devices
 const webApp = new SerialVoteDevice(participants);
