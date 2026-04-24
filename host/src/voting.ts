@@ -13,7 +13,7 @@ class ApplicationManager {
   private sequenceId = 0;
 
   constructor(private readonly network: Radiostack.NetworkManager, private readonly participants?: number[]) {
-    network.onReceivedBuffer((buffer) => this.handlePacket(buffer));
+    network.onReceivedBuffer((_, buffer) => this.handlePacket(buffer));
   }
 
   onPair(callback: ApplicationManager["pairCallback"]) {
@@ -51,17 +51,6 @@ class ApplicationManager {
       this.pairCallback(device);
   }
 
-  pair() {
-    const packet = Radiostack.ApplicationPacket.encode({
-      type: Radiostack.ApplicationPacketType.Pair,
-      id: control.deviceSerialNumber(),
-      n: 0,
-    });
-    radio.setTransmitPower(0);
-    this.network.broadcast(packet);
-    radio.setTransmitPower(7);
-  }
-
   private handleCast(packet: Radiostack.ApplicationPacket) {
     if (this.voteHosting === undefined ||
       this.voteHosting.id != packet.id ||
@@ -70,14 +59,5 @@ class ApplicationManager {
     this.voteHosting.results[packet.n]++;
     if (this.resultsCallback !== undefined)
       this.resultsCallback(this.voteHosting.results);
-  }
-
-  identify(device: number) {
-    const packet = Radiostack.ApplicationPacket.encode({
-      type: Radiostack.ApplicationPacketType.Identify,
-      id: 0,
-      n: 0,
-    });
-    this.network.sendBuffer(device, packet);
   }
 }

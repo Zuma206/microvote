@@ -8,7 +8,7 @@ namespace Radiostack {
   const BROADCAST = 0;
 
   export class NetworkManager {
-    private recievedBufferCallback = (buffer: Buffer) => { };
+    private recievedBufferCallback = (address: number, buffer: Buffer) => { };
 
     onReceivedBuffer(cb: NetworkManager["recievedBufferCallback"]) {
       this.recievedBufferCallback = cb;
@@ -29,7 +29,7 @@ namespace Radiostack {
     private handleReceivedBuffer(buffer: Buffer) {
       const packet = NetworkPacket.decode(buffer);
       if (packet.dest !== ME && packet.dest !== BROADCAST) return;
-      this.recievedBufferCallback(packet.msg);
+      this.recievedBufferCallback(radio.receivedSerial(), packet.msg);
     }
 
     sendBuffer(dest: number, msg: Buffer) {

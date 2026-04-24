@@ -1,7 +1,6 @@
 namespace Radiostack {
   export enum ApplicationPacketType {
     Start,
-    Identify,
     Pair,
     Cast,
   }

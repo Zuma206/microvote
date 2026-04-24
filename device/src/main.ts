@@ -12,7 +12,6 @@ const ui = new UserInterface(ICON_LIFETIME);
 
 // Add voting plumming
 voting.onStart((choices) => ui.start(choices));
-voting.onIdentify(() => ui.identify());
 
 // Add ui plumming
 ui.onSelect((choice) => voting.cast(choice));
