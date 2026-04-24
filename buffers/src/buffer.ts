@@ -4,15 +4,13 @@ namespace Buffers {
     public readonly zero: Buffer = pins.createBuffer(0);
 
     constructor(lengthEncoding?: EncodingImpl<number>) {
-      if (lengthEncoding)
-        this.lengthEncoding = lengthEncoding;
-      else
-        this.lengthEncoding = uInt32;
+      if (lengthEncoding) this.lengthEncoding = lengthEncoding;
+      else this.lengthEncoding = uInt32;
     }
 
     encodeAt(buffer: Buffer, offset: number, value: Buffer): number {
       const lengthWritten = this.lengthEncoding.encodeAt(buffer, offset, value.length);
-      for (let i = 0; i < lengthWritten; i++) {
+      for (let i = 0; i < value.length; i++) {
         const byteOffset = offset + lengthWritten + i;
         buffer.setUint8(byteOffset, value.getUint8(i));
       }
@@ -21,7 +19,7 @@ namespace Buffers {
 
     decodeAt(buffer: Buffer, offset: number): DecodeAtResult<Buffer> {
       const { value: length, read } = this.lengthEncoding.decodeAt(buffer, offset);
-      const value = buffer.slice(offset + read, length);
+      const value = buffer.slice(offset + read, offset + read + length);
       return { value, read: read + value.length };
     }
 
@@ -31,11 +29,11 @@ namespace Buffers {
   }
 
   /**
-  * Encoding a buffer and it's length using a given length encoding,
-  * which is uInt32LE by default.
-  * Format: (length, ...buffer)
-  * @param lengthEncoding the encoding to write the length with
-  */
+   * Encoding a buffer and it's length using a given length encoding,
+   * which is uInt32LE by default.
+   * Format: (length, ...buffer)
+   * @param lengthEncoding the encoding to write the length with
+   */
   export function buffer(lengthEncoding?: EncodingImpl<number>) {
     return new Encoding(new BufferEncoding(lengthEncoding));
   }
