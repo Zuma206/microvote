@@ -1,11 +1,3 @@
-function newResults(n: number) {
-  const results: number[] = [];
-  for (let i = 0; i < n; i++) {
-    results.push(0);
-  }
-  return results;
-}
-
 class ApplicationManager {
   private voteParticipation?: { host: number, id: number };
   private startCallback?: (choices: number) => void;

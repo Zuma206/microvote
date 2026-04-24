@@ -7,49 +7,26 @@ function newResults(n: number) {
 }
 
 class ApplicationManager {
-  private voteParticipation?: { host: number, id: number };
   private voteHosting?: { id: number, results: number[] };
   private resultsCallback?: (results: number[]) => void;
-  private startCallback?: (choices: number) => void;
   private pairCallback?: (device: number) => void;
-  private identifyCallback?: () => void;
   private sequenceId = 0;
 
   constructor(private readonly network: Radiostack.NetworkManager, private readonly participants?: number[]) {
     network.onNewConnection((address) => {
       network.getAddress(address).onReceivedBuffer((buffer) => {
-        this.handlePacket(address, buffer);
+        this.handlePacket(buffer);
       });
     });
-    network.onBroadcast((address, buffer) => this.handlePacket(address, buffer));
+    network.onBroadcast((_, buffer) => this.handlePacket(buffer));
   }
 
   onPair(callback: ApplicationManager["pairCallback"]) {
     this.pairCallback = callback;
   }
 
-  onIdentify(callback: ApplicationManager["identifyCallback"]) {
-    this.identifyCallback = callback;
-  }
-
   onResults(callback: ApplicationManager["resultsCallback"]) {
     this.resultsCallback = callback;
-  }
-
-  onStart(callback: ApplicationManager["startCallback"]) {
-    this.startCallback = callback;
-  }
-
-  cast(n: number) {
-    if (this.voteParticipation === undefined) return;
-    const packet = Radiostack.ApplicationPacket.encode({
-      id: this.voteParticipation.id,
-      flags: {},
-      n,
-    });
-    const host = this.network.getAddress(this.voteParticipation.host);
-    host.sendBuffer(packet);
-    this.voteParticipation = undefined;
   }
 
   start(n: number) {
@@ -67,12 +44,12 @@ class ApplicationManager {
     });
   }
 
-  private handlePacket(address: number, buffer: Buffer) {
+  private handlePacket(buffer: Buffer) {
     const packet = Radiostack.ApplicationPacket.decode(buffer);
     if (packet.flags.start === true)
-      return this.handleStart(address, packet);
+      return;
     else if (packet.flags.identify === true)
-      return this.handleIdentify();
+      return;
     else if (packet.flags.pair === true)
       return this.handlePair(packet.id);
     this.handleCast(packet);
@@ -94,12 +71,6 @@ class ApplicationManager {
     radio.setTransmitPower(7);
   }
 
-  private handleStart(address: number, packet: Radiostack.ApplicationPacket) {
-    this.voteParticipation = { host: address, id: packet.id };
-    if (this.startCallback !== undefined)
-      this.startCallback(packet.n);
-  }
-
   private handleCast(packet: Radiostack.ApplicationPacket) {
     if (this.voteHosting === undefined ||
       this.voteHosting.id != packet.id ||
@@ -117,10 +88,5 @@ class ApplicationManager {
       n: 0,
     });
     this.network.getAddress(device).sendBuffer(packet);
-  }
-
-  private handleIdentify() {
-    if (this.identifyCallback !== undefined)
-      this.identifyCallback();
   }
 }
