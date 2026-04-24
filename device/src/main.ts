@@ -40,6 +40,16 @@ voting.onStart((choices) => ui.start(choices));
 voting.onIdentify(() => ui.identify());
 voting.onFailure(() => ui.failure());
 voting.onSuccess(() => ui.success());
+voting.onPair((device) => {
+  const devices = participants.get();
+  if (devices.find((d) => d === device) !== undefined)
+    return;
+  devices.push(device);
+  participants.set(devices);
+  webApp.setDevices(devices);
+  ui.paired();
+});
 
 // Add ui plumming
 ui.onSelect((choice) => voting.cast(choice));
+ui.onPair(() => voting.pair());

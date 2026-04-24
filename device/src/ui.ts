@@ -1,5 +1,6 @@
 class UserInterface {
   private selectCallback?: (choice: number) => void;
+  private pairCallback = () => { };
   private choices?: number;
   private selected = 0;
 
@@ -47,6 +48,8 @@ class UserInterface {
   }
 
   private select() {
+    if (this.choices === undefined)
+      return this.pairCallback();
     if (this.selectCallback) this.selectCallback(this.selected);
     this.choices = undefined;
     this.selected = 0;
@@ -72,5 +75,9 @@ class UserInterface {
 
   paired() {
     this.displayIcon(IconNames.Yes);
+  }
+
+  onPair(pairedCallback: UserInterface["pairCallback"]) {
+    this.pairCallback = pairedCallback;
   }
 }
