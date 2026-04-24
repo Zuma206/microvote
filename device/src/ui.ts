@@ -7,7 +7,7 @@ class UserInterface {
     this.selectCallback = callback;
   }
 
-  constructor() {
+  constructor(private readonly iconDisplayTime: number) {
     input.onButtonPressed(Button.A, () => this.left());
     input.onButtonPressed(Button.B, () => this.right());
     input.onButtonPressed(Button.AB, () => this.select());
@@ -20,7 +20,7 @@ class UserInterface {
   }
 
   private render() {
-    if (this.choices) {
+    if (this.choices !== undefined) {
       const char = String.fromCharCode("A".charCodeAt(0) + this.selected);
       basic.showString(char);
     } else {
@@ -51,5 +51,22 @@ class UserInterface {
     this.choices = undefined;
     this.selected = 0;
     this.render();
+  }
+
+  private displayIcon(icon: IconNames) {
+    basic.showIcon(icon, this.iconDisplayTime);
+    this.render();
+  }
+
+  success() {
+    this.displayIcon(IconNames.Yes);
+  }
+
+  failure() {
+    this.displayIcon(IconNames.No);
+  }
+
+  identify() {
+    this.displayIcon(IconNames.Happy);
   }
 }
