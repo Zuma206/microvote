@@ -30,10 +30,10 @@ class ApplicationManager {
   pair() {
     const packet = Radiostack.ApplicationPacket.encode({
       type: Radiostack.ApplicationPacketType.Pair,
-      id: control.deviceSerialNumber(),
+      id: 0,
       n: 0,
     });
-    radio.setTransmitPower(0);
+    radio.setTransmitPower(1);
     this.network.broadcast(packet);
     radio.setTransmitPower(7);
   }

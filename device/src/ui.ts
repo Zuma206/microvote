@@ -8,7 +8,7 @@ class UserInterface {
     this.selectCallback = callback;
   }
 
-  constructor(private readonly iconDisplayTime: number) {
+  constructor() {
     input.onButtonPressed(Button.A, () => this.left());
     input.onButtonPressed(Button.B, () => this.right());
     input.onButtonPressed(Button.AB, () => this.select());
@@ -54,19 +54,6 @@ class UserInterface {
     this.choices = undefined;
     this.selected = 0;
     this.render();
-  }
-
-  private displayIcon(icon: IconNames) {
-    basic.showIcon(icon, this.iconDisplayTime);
-    this.render();
-  }
-
-  identify() {
-    this.displayIcon(IconNames.Happy);
-  }
-
-  paired() {
-    this.displayIcon(IconNames.Yes);
   }
 
   onPair(pairedCallback: UserInterface["pairCallback"]) {

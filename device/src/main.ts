@@ -1,4 +1,5 @@
 // Setup radio
+radio.setTransmitSerialNumber(true);
 radio.setTransmitPower(7);
 radio.setGroup(0);
 
