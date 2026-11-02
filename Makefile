@@ -10,7 +10,13 @@ builds = 		build-app \
 						build-device \
 						build-host
 
-.PHONY: $(installs) install $(builds) build test
+.PHONY: help $(installs) install $(builds) build test
+
+help:
+	@echo "make <command>"
+	@echo "install: setup the environment and install dependencies"
+	@echo "help: display this message"
+	@echo "test: run automated tests where applicable"
 
 build: $(builds)
 
