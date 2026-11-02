@@ -7,8 +7,6 @@
     "email": "j.peedle@lancaster.ac.uk"
   },
   "scripts": {
-    "install": "mkc install",
-    "build": "mkc build",
     "mkc": "mkc"
   },
   "dependencies": {
