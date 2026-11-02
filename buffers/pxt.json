@@ -1,22 +1,22 @@
 {
-  "name": "buffers",
-  "dependencies": {
-    "core": "*",
-    "radio": "*"
-  },
-  "files": [
-    "src/encoding.ts",
-    "src/numbers.ts",
-    "src/struct.ts",
-    "src/buffer.ts"
-  ],
-  "testFiles": [
-    "tests/testing.ts",
-    "tests/cases.ts"
-  ],
-  "public": true,
-  "supportedTargets": [
-    "microbit"
-  ],
-  "preferredEditor": "blocksprj"
+    "name": "buffers",
+    "dependencies": {
+        "core": "*",
+        "radio": "*"
+    },
+    "files": [
+        "src/encoding.ts",
+        "src/numbers.ts",
+        "src/struct.ts",
+        "src/buffer.ts"
+    ],
+    "testFiles": [
+        "tests/testing.ts",
+        "tests/cases.ts"
+    ],
+    "public": true,
+    "supportedTargets": [
+        "microbit"
+    ],
+    "preferredEditor": "blocksprj"
 }

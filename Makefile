@@ -33,6 +33,7 @@ install-app: install-all
 
 install-buffers: install-all
 	npm --prefix buffers install
+	npm --prefix buffers run pxt target microbit
 	npm --prefix buffers run pxt install
 
 install-device: install-all
@@ -49,7 +50,6 @@ install-radiostack: install-all
 
 install-serialvote: install-all
 	npm --prefix serialvote install
-	npm --prefix serialvote run mkc install
 
 build-app:
 	npm --prefix app run build
